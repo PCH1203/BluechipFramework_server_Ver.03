@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.framework.demo.mapper.user.UserMapper">
+
+    <select id="loadUser" resultType="com.framework.demo.model.user.vo.UserVo">
+        SELECT *
+        FROM USERS
+        WHERE USER_EMAIL = #{email}
+    </select>
+
+    <select id="findUserByUsername" resultType="com.framework.demo.model.user.vo.UserVo">
+        SELECT *
+        FROM  BCF_USER
+        WHERE USER_EMAIL = #{username}
+    </select>
+
+    <select id="findUserByUserEmail" resultType="com.framework.demo.model.user.vo.UserVo">
+        SELECT *
+        FROM  BCF_USER
+        WHERE USER_EMAIL = #{userEmail}
+    </select>
+
+    <insert id="join" parameterType="com.framework.demo.model.user.dto.JoinDto">
+        INSERT INTO BCF_USER
+        (
+        UID,
+        USER_EMAIL,
+        PASSWORD,
+        USER_NICKNAME,
+        PHONE,
+        ROLE,
+        CREATE_DT
+        )
+        VALUES
+        (
+        #{uid},
+        #{userEmail},
+        #{password},
+        #{userNickname},
+        #{phone},
+        #{role},
+        DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+        )
+    </insert>
+
+    <insert id="addSession" parameterType="com.framework.demo.model.user.dto.AddSessionDto">
+        INSERT INTO BCF_SESSION
+        (
+        UID,
+        ACCESS_IP,
+        SESSION_ID,
+        STATUS,
+        CREATE_DT
+        )
+        VALUES
+        (
+        #{uid},
+        #{accessIp},
+        #{sessionId},
+        #{status},
+        DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+        )
+    </insert>
+
+    <update id="saveRefreshToken">
+        UPDATE BCF_USER
+        SET REFRESH_TOKEN = #{refreshToken}
+        WHERE UID = #{uid}
+    </update>
+
+
+
+
+</mapper>

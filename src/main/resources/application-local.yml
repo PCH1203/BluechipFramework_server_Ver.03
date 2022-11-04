@@ -1,0 +1,28 @@
+#spring:
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#      show-sql: true
+
+springdoc:
+ swagger-ui:
+    path: /framework/demo
+    operationsSorter: method
+
+logging:
+     level:
+       com:
+         security:
+           test: DEBUG
+           org:
+             springframework:
+               web: DEBUG
+               jdbc: DEBUG
+               hibernate:
+                 type:
+                   descriptor:
+                     sql:
+                       BasicBinder: TRACE
+                       SQL: DEBUG
+
+
