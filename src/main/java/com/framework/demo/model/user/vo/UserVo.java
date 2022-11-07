@@ -1,5 +1,6 @@
 package com.framework.demo.model.user.vo;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.List;
@@ -9,10 +10,11 @@ public class UserVo {
 
     private String uid;
     private String userEmail;
+    private String password;
     private String userNickname;
     private String phone;
-    private List<String> roles;
-    private String password;
+//    private List<String> roles;
+    private String role;
     private String accessToken;
     private String refreshToken;
 

@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/v2/api/framework/auth")
 @RequiredArgsConstructor
-@Tag(name = "[Auth] 사용자 인증 클래스", description = "Auth Controller")
+@Tag(name = "[AUTH] 사용자 인증 클래스", description = "Auth Controller")
 public class AuthController {
 
     private final AuthService authService;

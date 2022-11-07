@@ -1,6 +1,7 @@
 package com.framework.demo.jwt;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 //해당 클래스는 JwtTokenProvider가 검증을 끝낸 Jwt로부터 유저 정보를 조회해와서 UserPasswordAuthenticationFilter 로 전달합니다.
+@Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
@@ -25,6 +27,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
         // 헤더에서 JWT 를 받아옵니다.
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+        HttpServletRequest httpServletRequest =(HttpServletRequest) request;
+        String requestURI = httpServletRequest.getRequestURI();
 
         System.out.println("token: " + token);
 
@@ -38,6 +42,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
             // SecurityContext 에 Authentication 객체를 저장합니다.
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            log.info("Security context에 '{}' 인증 정보를 저장했습니다, url: {}",authentication.getName(), requestURI);
         }
         chain.doFilter(request, response);
 

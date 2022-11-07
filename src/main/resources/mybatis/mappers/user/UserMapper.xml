@@ -3,10 +3,16 @@
 
 <mapper namespace="com.framework.demo.mapper.user.UserMapper">
 
-    <select id="loadUser" resultType="com.framework.demo.model.user.vo.UserVo">
+    <select id="findUserByUid" resultType="com.framework.demo.model.user.vo.UserVo">
         SELECT *
-        FROM USERS
-        WHERE USER_EMAIL = #{email}
+        FROM BCF_USER
+        WHERE UID = #{uid}
+    </select>
+
+    <select id="findUserByPhone" resultType="com.framework.demo.model.user.vo.UserVo">
+        SELECT *
+        FROM BCF_USER
+        WHERE PHONE = #{phone}
     </select>
 
     <select id="findUserByUsername" resultType="com.framework.demo.model.user.vo.UserVo">
@@ -21,15 +27,22 @@
         WHERE USER_EMAIL = #{userEmail}
     </select>
 
+    <select id="findIsLoginByUid" resultType="com.framework.demo.model.user.vo.IsLoginVo">
+        SELECT *
+        FROM  BCF_LOGIN_STATUS
+        WHERE UID = #{uid}
+    </select>
+
     <insert id="join" parameterType="com.framework.demo.model.user.dto.JoinDto">
         INSERT INTO BCF_USER
         (
         UID,
         USER_EMAIL,
         PASSWORD,
-        USER_NICKNAME,
+        NAME,
         PHONE,
         ROLE,
+        TYPE,
         CREATE_DT
         )
         VALUES
@@ -37,9 +50,10 @@
         #{uid},
         #{userEmail},
         #{password},
-        #{userNickname},
+        #{name},
         #{phone},
         #{role},
+        #{type},
         DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
         )
     </insert>
@@ -63,12 +77,33 @@
         )
     </insert>
 
-    <update id="saveRefreshToken">
-        UPDATE BCF_USER
-        SET REFRESH_TOKEN = #{refreshToken}
+
+
+    <update id="modifyIsLogin" parameterType="com.framework.demo.model.user.dto.IsLoginDto">
+        UPDATE BCF_LOGIN_STATUS
+        SET IS_LOGIN = #{loginStatus},
+        UPDATE_DT = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
         WHERE UID = #{uid}
     </update>
 
+    <insert id="saveIsLogin" parameterType="com.framework.demo.model.user.dto.IsLoginDto">
+        INSERT INTO BCF_LOGIN_STATUS
+        (
+        UID,
+        USER_ID,
+        TYPE,
+        IS_LOGIN,
+        CREATE_DT
+        )
+        VALUES
+        (
+        #{uid},
+        #{userId},
+        #{type},
+        #{isLogin},
+        DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+        )
+    </insert>
 
 
 

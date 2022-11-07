@@ -12,11 +12,11 @@ import javax.persistence.Entity;
 
 @Builder
 @Data
-@Entity(name = "BCF_USER")
-@Table(name = "BCF_USER")
+@Entity(name = "BCF_LOGIN_STATUS")
+@Table(name = "BCF_LOGIN_STATUS")
 @NoArgsConstructor
 @AllArgsConstructor
-public class BcfUser { // UserDetails는 Spring Sequrity가 고나리하는 객체이다.
+public class BcfLoginStatus {
 
     @javax.persistence.Id
     @javax.persistence.Column(name ="UID", length = 20, nullable = false)
@@ -24,38 +24,25 @@ public class BcfUser { // UserDetails는 Spring Sequrity가 고나리하는 객�
     @Column("UID")
     private String uid;
 
-    @javax.persistence.Column(name = "USER_EMAIL", nullable = false, length = 100, unique = true)
-    @Column("USER_EMAIL")
-    private String userEmail;
+    @javax.persistence.Column(name = "USER_ID", nullable = false, length = 100, unique = true)
+    @Column("USER_ID")
+    private String userId;
 
-    @javax.persistence.Column(name = "PASSWORD", nullable = false, length = 100, unique = true)
-    @Column("PASSWORD")
-    private String password;
-
-    @javax.persistence.Column(name = "NAME", length = 15)
-    @Column("NAME")
-    private String name;
-
-    @javax.persistence.Column(name = "PHONE", length = 20, nullable = false, unique = true)
-    @Column("PHONE")
-    private String phone;
-
-    @javax.persistence.Column(name = "TYPE", length = 20, nullable = false)
+    @javax.persistence.Column(name = "TYPE", nullable = false)
     @Column("TYPE")
     private String type;
 
-    @javax.persistence.Column(name = "ROLE", length = 20, nullable = false)
-    @Column("ROLE")
-    private String role;
+    @javax.persistence.Column(name = "IS_LOGIN", length = 2)
+    @Column("IS_LOGIN")
+    private String isLogin;
 
-    @javax.persistence.Column(name = "CREATE_DT", length = 40, nullable = false)
+    @javax.persistence.Column(name = "CREATE_DT", length = 40, nullable = true)
     @Column("CREATE_DT")
     private String createDt;
 
     @javax.persistence.Column(name = "UPDATE_DT", length = 40, nullable = true)
     @Column("UPDATE_DT")
     private String updateDt;
-
 
 //    @javax.persistence.Column(name = "enabled", length = 20, nullable = false)
 //    @Column("enabled")

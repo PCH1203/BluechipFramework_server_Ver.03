@@ -9,5 +9,6 @@ public interface UserService {
 
     ResponseEntity<?> join(JoinDto joinDto);
     public ResponseEntity<?> login (HttpServletRequest request, String userEmail, String password);
+    public ResponseEntity<?> logout (HttpServletRequest request);
 
 }

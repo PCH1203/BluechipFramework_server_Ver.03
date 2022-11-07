@@ -46,9 +46,9 @@ public class JwtTokenProvider {
     }
 
     // JWT 토큰 생성 함수
-    public String createToken (String userPk, List<String> roles) {
+    public String createToken (String userPk, String role) {
         Claims claims = Jwts.claims().setSubject(userPk); //JWT payload에 저장되는 정보단위, 보통 여기서 user 식별 값을 넣는다.
-        claims.put("roles", roles); // 정보는 key / value 쌍으로 저장된다.
+        claims.put("roles", role); // 정보는 key / value 쌍으로 저장된다.
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims) // 정보 저장
@@ -59,9 +59,9 @@ public class JwtTokenProvider {
     }
 
     //JWT 리프레시 토큰 생성
-    public String createRefreshToken (String userPk, List<String> roles) {
+    public String createRefreshToken (String userPk, String role) {
         Claims claims = Jwts.claims().setSubject(userPk); //JWT payload에 저장되는 정보단위, 보통 여기서 user 식별 값을 넣는다.
-        claims.put("roles", roles); // 정보는 key / value 쌍으로 저장된다.
+        claims.put("roles", role); // 정보는 key / value 쌍으로 저장된다.
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims) // 정보 저장
@@ -74,12 +74,9 @@ public class JwtTokenProvider {
     // JWT 토큰에서 인증 정보 조회
     public Authentication getAuthentication(String token) {
 
-        // 토큰 접두사 Bearer을 제거해 줘야한다.
-        token = BearerRemove(token); // Bearer 제거
+        token = BearerRemove(token); // JWT 토큰 접두사 bearer 제거
 
         System.out.println("Bearer 제거 확인 : " + token);
-
-//        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
 
         UserDetails userDetails = userDetailServiceImpl.loadUserByUsername(this.getUserPk(token));
 

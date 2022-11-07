@@ -42,6 +42,14 @@ public class UserController {
         return userService.login(request, userEmail, password);
     }
 
+    @PostMapping("/logout")
+    @Operation(description = "로그아웃시 IsLogin status 값 변경 및 RefreshToken 삭제", summary = "로그아웃 API")
+    public ResponseEntity<?> logout (HttpServletRequest request) {
+        log.trace("로그아웃 API 호출");
+        System.out.println("request.AccessToken: " + request.getHeader("Authorization"));
+        return userService.logout(request);
+    }
+
     // 시큐리티 필터 테스트 API
     @PostMapping("/test")
     @Operation(description = "로그인을 통해 발급 받은 Access token을 통해 접근 가능하다.", summary = "Access 토큰 테스트 API")

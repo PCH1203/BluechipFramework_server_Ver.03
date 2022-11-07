@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.framework.demo.mapper.auth.AuthMapper">
+
+    <select id="findByRefreshToken" resultType="String">
+        SELECT *
+        FROM BCF_AUTHORITIES
+        WHERE REFRESH_TOKEN = #{refreshToken}
+    </select>
+
+    <update id="removeRefreshToken" parameterType="com.framework.demo.model.user.dto.IsLoginDto">
+        UPDATE BCF_AUTHORITIES
+        SET REFRESH_TOKEN = "",
+        UPDATE_DT = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+        WHERE UID = #{uid}
+    </update>
+
+    <update id="modifyRefreshToken">
+        UPDATE BCF_AUTHORITIES
+        SET REFRESH_TOKEN = #{refreshToken},
+        UPDATE_DT = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+        WHERE UID = #{uid}
+    </update>
+
+    <insert id="saveRefreshToken">
+        INSERT INTO BCF_AUTHORITIES
+        (
+        UID,
+        REFRESH_TOKEN,
+        CREATE_DT
+        )
+        VALUES
+        (
+        #{uid},
+        #{refreshToken},
+        DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
+        )
+    </insert>
+
+
+
+</mapper>
