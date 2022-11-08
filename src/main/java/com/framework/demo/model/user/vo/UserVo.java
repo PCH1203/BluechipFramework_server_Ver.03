@@ -3,13 +3,16 @@ package com.framework.demo.model.user.vo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import javax.validation.constraints.Email;
 import java.util.List;
 
 @Data
 public class UserVo {
 
     private String uid;
+    @Email
     private String userEmail;
+    @Schema(description = "비밀번호")
     private String password;
     private String userNickname;
     private String phone;

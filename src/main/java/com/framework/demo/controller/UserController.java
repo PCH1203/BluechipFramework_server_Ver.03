@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @RestController
-@RequestMapping("/v2/api/security/user")
+@RequestMapping("/framework/api/user")
 @RequiredArgsConstructor
 @Tag(name = "[USER] 클래스", description = "User Controller")
 public class UserController {
@@ -48,6 +48,16 @@ public class UserController {
         log.trace("로그아웃 API 호출");
         System.out.println("request.AccessToken: " + request.getHeader("Authorization"));
         return userService.logout(request);
+    }
+
+    @PostMapping("/force-logout")
+    @Operation(description = "관리자 권한이 필요한 강제 로그아웃 API입니다.", summary = "강제 로그아웃 API")
+    public ResponseEntity<?> forceLogout (
+            @RequestParam(required = true) @Parameter(description = "uid")String uid
+            ) {
+        System.out.println("강제 로그아웃 API") ;
+        System.out.println("uid: " + uid) ;
+        return userService.forceLogout(uid);
     }
 
     // 시큐리티 필터 테스트 API

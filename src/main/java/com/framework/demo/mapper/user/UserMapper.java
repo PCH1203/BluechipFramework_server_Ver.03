@@ -11,7 +11,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UserMapper {
         UserVo findUserByUid(String uid);
         UserVo findUserByPhone(String phone);
-
         UserVo findUserByUsername(String username);
         UserVo findUserByUserEmail(String userEmail);
 

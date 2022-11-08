@@ -169,4 +169,22 @@ public class UserServiceImpl implements UserService {
         }
 
     }
+
+    @Override
+    public ResponseEntity<?> forceLogout(String uid) {
+
+            UserVo user = userMapper.findUserByUid(uid);
+
+            if(user != null) {
+
+                String loginStatus = "N";
+                userMapper.modifyIsLogin(uid, loginStatus);
+                authMapper.removeRefreshToken(uid);
+
+                return new ResponseEntity(new MessageResponseDto(user, "강제로그인 완료"), HttpStatus.OK);
+
+            } else {
+                return new ResponseEntity(new MessageResponseDto(uid, "해당 사용자를 찾을 수 없습니다."), HttpStatus.OK);
+            }
+    }
 }
