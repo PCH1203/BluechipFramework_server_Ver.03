@@ -17,13 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/v2/api/framework/auth")
 @RequiredArgsConstructor
-@Tag(name = "[AUTH] 사용자 인증 클래스", description = "Auth Controller")
+@Tag(name = "[AUTH] 인증/인가 클래스", description = "Auth Controller")
 public class AuthController {
 
     private final AuthService authService;
 
     @PostMapping("/token-refresh")
-    @Operation(description = "Access token을 갱신 합니다.", summary = "Token Refresh API")
+    @Operation(description = "Access token을 갱신 합니다.", summary = "토큰 리프래쉬 API")
     public ResponseEntity<?> tokenRefresh(HttpServletRequest request) {       
         log.info("Token Refresh API 호출");
         System.out.println("Refresh Token: " + request.getHeader("Authorization"));

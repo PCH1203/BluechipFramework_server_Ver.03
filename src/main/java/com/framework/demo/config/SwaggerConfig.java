@@ -5,6 +5,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,13 +19,17 @@ import org.springframework.context.annotation.Configuration;
 //)
 public class SwaggerConfig {
 
+
+
+    @Value("${springdoc.swagger-ui.mainDescription}")
+    String mainDescription;
     @Bean
     public OpenAPI openApi() {
 
         Info info = new Info()
                 .version("v1.0.0")
                 .title("BlueChip - Framework")
-                .description("Boilerplate Code");
+                .description(mainDescription);
 
         // SecuritySecheme명
         String jwtSchemeName = "JWT 토큰";

@@ -4,10 +4,42 @@
 #      ddl-auto: update
 #      show-sql: true
 
+#spring:
+#  servlet:
+#    multipart:
+#      max-file-size: 10MB
+#      max-request-size: 10MB
+#      location: C:/01.project/01.Bluechip_framework/03.Framework_server_Ver.03/fileStorage
+
+
+
 springdoc:
  swagger-ui:
     path: /framework/demo
-    operationsSorter: method
+    operationsSorter: methodxxxx
+    mainDescription: |
+      **<  SWAGGER-UI 사용자 메뉴얼 >**  
+      
+      **STEP 1 --------------------------------------------------------------------------------------------**  
+      
+      [USER] Account 클래스의 **로그인 API**를 통해 로그인 후 Access/Refresh Token 을 발급받는다.  
+      
+      **STEP 2 --------------------------------------------------------------------------------------------**           
+      
+      우측 하단의 **Authorize**에 Access Token 을 등록한다 (전역 헤더 설정).   
+      
+      **STEP 3 --------------------------------------------------------------------------------------------**    
+      
+      Access Token 의 전역 헤더 설정을 완료 했다면 API에 접근 할 수 있다.  
+      
+      **STEP 4 --------------------------------------------------------------------------------------------**   
+      
+      API 사용시 **403 Forbidden**이 발생한다면 Access Token 이 말료된 것으로  
+      [AUTH] 인증/인가 클래스의 Token Refresh API를 통해 Access Token 을 재발급 받는다.  
+      토큰 재발급 후 STEP 2,3 과정을 수행한다.
+      
+    
+      
 
 logging:
      level:

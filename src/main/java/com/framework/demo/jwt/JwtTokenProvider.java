@@ -1,5 +1,9 @@
 package com.framework.demo.jwt;
 
+import com.framework.demo.domain.BcfUser;
+import com.framework.demo.mapper.user.UserMapper;
+import com.framework.demo.model.user.vo.UserVo;
+import com.framework.demo.repository.user.UserRepository;
 import com.framework.demo.service.security.impl.UserDetailServiceImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -28,11 +32,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
+    private final UserMapper userMapper;
+
+    private final UserRepository userRepository;
+
     @Value("${jwt.private.key}")
     private String secretKey;
 
     // 토큰 유효시간 30분
-    private long tokenValidTime = 1 * 60 * 1000L;
+    private long tokenValidTime = 30 * 60 * 1000L;
 //    private long tokenValidTime = 30 * 60 * 1000L;
     // 리프레시 유효시간 24시간
     private long refreshTokenValidTime = 60 * 60 * 24 * 1000L;
@@ -91,11 +99,22 @@ public class JwtTokenProvider {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
+    // 토큰에서 회원 정보 추출
+    public BcfUser findUserInfoByRequest(HttpServletRequest request) {
+        System.out.println("request Header -> token -> userEmail -> uid 추출: ");
+        System.out.println("Authorization: " + request.getHeader("Authorization"));
+        String token = resolveToken(request);
+        String userPk = getUserPk(token);
+        System.out.println(">>>>> userPk: " + userPk);
+
+
+        return userRepository.findByUserEmail(userPk);
+    }
+
     // Request의 Header에서 token 값을 가져온니다. "Authorization" : "Tokent 값"
     public String resolveToken(HttpServletRequest request) {
 
         if(request.getHeader("Authorization") != null) {
-            System.out.println("리퀘스트 널");
             String refreshToken = BearerRemove(request.getHeader("Authorization")); // Bearer 제거
             return refreshToken;
         } else {
