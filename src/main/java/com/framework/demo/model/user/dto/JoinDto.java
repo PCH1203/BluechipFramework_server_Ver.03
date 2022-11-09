@@ -25,6 +25,8 @@ public class JoinDto {
     private String type;
     @Schema(description = "권한 user/admin")
     private String role;
+    @Schema(description = "권한 general/master")
+    private String subRole;
 
 
 

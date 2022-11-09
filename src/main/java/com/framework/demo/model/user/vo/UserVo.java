@@ -14,7 +14,7 @@ public class UserVo {
     private String userEmail;
     @Schema(description = "비밀번호")
     private String password;
-    private String userNickname;
+    private String name;
     private String phone;
 //    private List<String> roles;
     private String role;

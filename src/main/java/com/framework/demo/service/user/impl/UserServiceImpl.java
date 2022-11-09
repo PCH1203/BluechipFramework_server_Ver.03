@@ -1,5 +1,6 @@
 package com.framework.demo.service.user.impl;
 
+import com.framework.demo.domain.BcfUser;
 import com.framework.demo.mapper.auth.AuthMapper;
 import com.framework.demo.model.user.dto.IsLoginDto;
 import com.framework.demo.model.user.vo.IsLoginVo;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +29,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
     private final AuthMapper authMapper;
-    private final JwtTokenProvider jwtTokenPorvider;
+    private final JwtTokenProvider jwtTokenProvider;
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @Override
@@ -42,6 +44,8 @@ public class UserServiceImpl implements UserService {
 
             // 비밀번호 확인
             if (!bCryptPasswordEncoder.matches(password, member.getPassword())) {
+
+                //Todo : 비밀번호 실패 카운트 증가 함수
 
                 return new ResponseEntity(new MessageResponseDto(1, "비밀번호를 확인하세요."), HttpStatus.OK);
 
@@ -59,9 +63,9 @@ public class UserServiceImpl implements UserService {
                     }else {
 
                         // Access token 발급
-                        member.setAccessToken(jwtTokenPorvider.createToken(member.getUsername(), member.getRole()));
+                        member.setAccessToken(jwtTokenProvider.createToken(member.getUsername(), member.getRole()));
                         // Refresh token 발급
-                        member.setRefreshToken(jwtTokenPorvider.createRefreshToken(member.getUsername(), member.getRole()));
+                        member.setRefreshToken(jwtTokenProvider.createRefreshToken(member.getUsername(), member.getRole()));
                         // Authorities 테이블 RefreshToken 저장.
                         authMapper.modifyRefreshToken(member.getUid(), member.getRefreshToken());
 
@@ -77,9 +81,9 @@ public class UserServiceImpl implements UserService {
                 } else {
 
                     // Access token 발급
-                    member.setAccessToken(jwtTokenPorvider.createToken(member.getUsername(), member.getRole()));
+                    member.setAccessToken(jwtTokenProvider.createToken(member.getUsername(), member.getRole()));
                     // Refresh token 발급
-                    member.setRefreshToken(jwtTokenPorvider.createRefreshToken(member.getUsername(), member.getRole()));
+                    member.setRefreshToken(jwtTokenProvider.createRefreshToken(member.getUsername(), member.getRole()));
                     // User 테이블 RefreshToken 저장.
                     authMapper.saveRefreshToken(member.getUid(), member.getRefreshToken());
 
@@ -145,12 +149,12 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<?> logout(HttpServletRequest request) {
 
         // 1. request로부터 Access 토큰을 가져온다.
-        String accessToken = jwtTokenPorvider.resolveToken(request);
+        String accessToken = jwtTokenProvider.resolveToken(request);
 
         //2. Access 토큰 유효성 검사.
-        if (jwtTokenPorvider.validateToken(accessToken)) {
+        if (jwtTokenProvider.validateToken(accessToken)) {
             // 2-1 Access Token 으로 부터 userPk 조회
-            String tokenUserId = jwtTokenPorvider.getUserPk(accessToken);
+            String tokenUserId = jwtTokenProvider.getUserPk(accessToken);
             // 2-2 userPk를 사용하여 userInfo 조회
             UserVo userInfo = userMapper.findUserByUserEmail(tokenUserId);
 
@@ -181,10 +185,24 @@ public class UserServiceImpl implements UserService {
                 userMapper.modifyIsLogin(uid, loginStatus);
                 authMapper.removeRefreshToken(uid);
 
-                return new ResponseEntity(new MessageResponseDto(user, "강제로그인 완료"), HttpStatus.OK);
+                return new ResponseEntity(new MessageResponseDto(user, "로그아웃 완료"), HttpStatus.OK);
 
             } else {
                 return new ResponseEntity(new MessageResponseDto(uid, "해당 사용자를 찾을 수 없습니다."), HttpStatus.OK);
             }
+    }
+
+    @Override
+    public ResponseEntity<?> findMyAccount(HttpServletRequest request) {
+
+        System.out.println(">>>>> findMyAccountImpl");
+
+        // request header의 userPk로 유저 정보 조회
+        BcfUser userInfo = jwtTokenProvider.findUserInfoByRequest(request);
+
+        return new ResponseEntity(new MessageResponseDto(userInfo, "나의 계정 정보를 조회 합니다."), HttpStatus.OK);
+        
+
+
     }
 }

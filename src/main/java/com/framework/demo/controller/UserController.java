@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/framework/api/user")
 @RequiredArgsConstructor
-@Tag(name = "[USER] 클래스", description = "User Controller")
+@Tag(name = "[USER] Account", description = "User Controller")
 public class UserController {
 
     private final UserService userService;
@@ -60,13 +60,22 @@ public class UserController {
         return userService.forceLogout(uid);
     }
 
-    // 시큐리티 필터 테스트 API
+    @GetMapping("/my-account")
+    @Operation(description = "나의 프로필 조회.", summary = "MY PROFILE 조회 API")
+    public ResponseEntity<?> findMyAccount (
+            HttpServletRequest request
+    ) {
+        System.out.println("나의 계정 정보 조회 API");
+        return userService.findMyAccount(request);
+    }
+
+/*    // 시큐리티 필터 테스트 API
     @PostMapping("/test")
     @Operation(description = "로그인을 통해 발급 받은 Access token을 통해 접근 가능하다.", summary = "Access 토큰 테스트 API")
     public String test () {
         System.out.println("token test API 호출");
         return "<h1>test 통과</h1>";
-    }
+    }*/
 
 
 }

@@ -11,5 +11,6 @@ public interface UserService {
     public ResponseEntity<?> login (HttpServletRequest request, String userEmail, String password);
     public ResponseEntity<?> logout (HttpServletRequest request);
     public ResponseEntity<?> forceLogout (String uid);
+    public ResponseEntity<?> findMyAccount (HttpServletRequest request);
 
 }

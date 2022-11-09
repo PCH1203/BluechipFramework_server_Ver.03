@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -47,6 +48,19 @@ public class BcfUser { // UserDetails는 Spring Sequrity가 고나리하는 객�
     @javax.persistence.Column(name = "ROLE", length = 20, nullable = false)
     @Column("ROLE")
     private String role;
+
+    @javax.persistence.Column(name = "SUB_ROLE", nullable = false, columnDefinition = "varchar(20) default 'general'")
+    @Column("SUB_ROLE")
+    private String subRole;
+
+    @javax.persistence.Column(name = "PASSWORD_FAIL_CNT", length = 22)
+    @Column("PASSWORD_FAIL_CNT")
+    @ColumnDefault("0")
+    private int passwordFailCnt;
+
+    @javax.persistence.Column(name = "LOCK_YN", length = 4, columnDefinition = "varchar(1) default 'N'")
+    @Column("LOCK_YN")
+    private String lockYn;
 
     @javax.persistence.Column(name = "CREATE_DT", length = 40, nullable = false)
     @Column("CREATE_DT")

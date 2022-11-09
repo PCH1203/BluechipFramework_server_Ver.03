@@ -42,6 +42,7 @@
         NAME,
         PHONE,
         ROLE,
+        SUB_ROLE,
         TYPE,
         CREATE_DT
         )
@@ -53,6 +54,7 @@
         #{name},
         #{phone},
         #{role},
+        #{subRole},
         #{type},
         DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
         )
