@@ -1,21 +1,18 @@
-package com.framework.demo.model.user.dto;
+package com.framework.demo.model.admin.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
 
-@Schema(description = "회원가입 DTO")
+@Schema(description = "User 계정 정보 변경 Dto")
 @Data
-public class JoinDto {
+public class ModifyAccountDto {
 
-    @JsonIgnore
+    @Schema(description = "사용자 uid")
     private String uid;
-    @Email
-    @Schema(description = "이메일(계정아이디)", example = "chanho1203@naver.com")
+    @Schema(description = "이메일(계정아이디)")
     private String userEmail;
     @Schema(description = "비밀번호")
     private String password;
@@ -29,6 +26,10 @@ public class JoinDto {
     private String role;
     @Schema(description = "권한 general/master")
     private String subRole;
+    @Schema(description = "계정 잠금 상태")
+    private String lockYn;
+    @Schema(description = "비밀번호 실패 카운트")
+    private String passwordFailCnt;
 
 
 

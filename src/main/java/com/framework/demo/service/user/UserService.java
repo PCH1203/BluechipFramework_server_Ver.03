@@ -1,6 +1,7 @@
 package com.framework.demo.service.user;
 
 import com.framework.demo.model.user.dto.JoinDto;
+import com.framework.demo.model.user.dto.ModifyMyAccountDto;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,9 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 public interface UserService {
 
     ResponseEntity<?> join(JoinDto joinDto);
-    public ResponseEntity<?> login (HttpServletRequest request, String userEmail, String password);
-    public ResponseEntity<?> logout (HttpServletRequest request);
-    public ResponseEntity<?> forceLogout (String uid);
     public ResponseEntity<?> findMyAccount (HttpServletRequest request);
+    public ResponseEntity<?> modifyMyAccount (HttpServletRequest request, ModifyMyAccountDto modifyMyAccountDto);
+
 
 }

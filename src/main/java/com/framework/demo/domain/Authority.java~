@@ -1,4 +1,4 @@
-package com.framework.demo.domain;
+package com.framework.demo.service.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

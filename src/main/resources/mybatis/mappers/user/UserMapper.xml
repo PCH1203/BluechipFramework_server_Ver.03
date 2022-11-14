@@ -27,12 +27,6 @@
         WHERE USER_EMAIL = #{userEmail}
     </select>
 
-    <select id="findIsLoginByUid" resultType="com.framework.demo.model.user.vo.IsLoginVo">
-        SELECT *
-        FROM  BCF_LOGIN_STATUS
-        WHERE UID = #{uid}
-    </select>
-
     <insert id="join" parameterType="com.framework.demo.model.user.dto.JoinDto">
         INSERT INTO BCF_USER
         (
@@ -106,6 +100,20 @@
         DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
         )
     </insert>
+
+    <update id="modifyMyAccount" parameterType="com.framework.demo.model.user.dto.ModifyMyAccountDto">
+        UPDATE BCF_USER
+        SET
+        UPDATE_DT = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'),
+        <if test="name != null">
+            NAME = #{name},
+        </if>
+        <if test="phone != null">
+            PHONE = #{phone}
+        </if>
+        WHERE UID = #{uid}
+    </update>
+
 
 
 

@@ -24,9 +24,9 @@ public class BcfAuthorities {
     @Column("UID")
     private String uid;
 
-    @javax.persistence.Column(name = "REFRESH_TOKEN", nullable = true)
+    @javax.persistence.Column(name = "REFRESH_TOKEN")
     @Column("REFRESH_TOKEN")
-    private String refreshtoken;
+    private String refreshToken;
 
     @javax.persistence.Column(name = "CREATE_DT", length = 40, nullable = false)
     @Column("CREATE_DT")

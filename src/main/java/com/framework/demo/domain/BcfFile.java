@@ -8,9 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.*;
 
 @Builder
 @Data
@@ -50,5 +48,14 @@ public class BcfFile {
     @javax.persistence.Column(name = "UPDATE_DT")
     @Column("UPDATE_DT")
     private String updateDt;
+
+//    @Builder
+//    public BcfFile(BcfUser uid, String originName, String savedName, String savedPath, String createDt) {
+//        this.uploader = uid;
+//        this.originName = originName;
+//        this.savedName = savedName;
+//        this.savedPath = savedPath;
+//        this.createDt = createDt;
+//    }
 
 }

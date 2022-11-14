@@ -12,11 +12,11 @@ import javax.persistence.Entity;
 
 @Builder
 @Data
-@Entity(name = "BCF_LOGIN_STATUS")
-@Table(name = "BCF_LOGIN_STATUS")
+@Entity(name = "BCF_LOGIN")
+@Table(name = "BCF_LOGIN")
 @NoArgsConstructor
 @AllArgsConstructor
-public class BcfLoginStatus {
+public class BcfLogin {
 
     @javax.persistence.Id
     @javax.persistence.Column(name ="UID", length = 20, nullable = false)
@@ -24,15 +24,7 @@ public class BcfLoginStatus {
     @Column("UID")
     private String uid;
 
-    @javax.persistence.Column(name = "USER_ID", nullable = false, length = 100, unique = true)
-    @Column("USER_ID")
-    private String userId;
-
-    @javax.persistence.Column(name = "TYPE", nullable = false)
-    @Column("TYPE")
-    private String type;
-
-    @javax.persistence.Column(name = "IS_LOGIN", length = 2)
+    @javax.persistence.Column(name = "IS_LOGIN", length = 2,  columnDefinition = "varchar(2) default 'Y'")
     @Column("IS_LOGIN")
     private String isLogin;
 
@@ -44,13 +36,6 @@ public class BcfLoginStatus {
     @Column("UPDATE_DT")
     private String updateDt;
 
-//    @javax.persistence.Column(name = "enabled", length = 20, nullable = false)
-//    @Column("enabled")
-//    private boolean enabled;
-//
-//    @javax.persistence.Column(name = "authorities")
-//    @Column("authorities")
-//    private String authorities;
 
 
 }

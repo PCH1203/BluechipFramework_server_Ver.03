@@ -1,15 +1,18 @@
 package com.framework.demo.controller;
 
+import com.framework.demo.domain.BcfUser;
 import com.framework.demo.model.user.dto.JoinDto;
+import com.framework.demo.model.user.dto.ModifyMyAccountDto;
 import com.framework.demo.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
@@ -30,38 +33,9 @@ public class UserController {
         return userService.join(joinDto);
     }
 
-    @PostMapping("/login")
-    @Operation(description = "로그인 성공시 Access Token, Refresh Token 발급", summary = "로그인 API")
-    public ResponseEntity<?> login (
-            HttpServletRequest request,
-            @RequestParam(required = true) @Parameter(description = "아이디")String userEmail,
-            @RequestParam(required = true) @Parameter(description = "비밀번호")String password
-    ) {
-        log.trace("로그인 API 호출");
-        System.out.println("sesson_id2: " + request.getRequestedSessionId());
-        return userService.login(request, userEmail, password);
-    }
-
-    @PostMapping("/logout")
-    @Operation(description = "로그아웃시 IsLogin status 값 변경 및 RefreshToken 삭제", summary = "로그아웃 API")
-    public ResponseEntity<?> logout (HttpServletRequest request) {
-        log.trace("로그아웃 API 호출");
-        System.out.println("request.AccessToken: " + request.getHeader("Authorization"));
-        return userService.logout(request);
-    }
-
-    @PostMapping("/force-logout")
-    @Operation(description = "관리자 권한이 필요한 강제 로그아웃 API입니다.", summary = "강제 로그아웃 API")
-    public ResponseEntity<?> forceLogout (
-            @RequestParam(required = true) @Parameter(description = "uid")String uid
-            ) {
-        System.out.println("강제 로그아웃 API") ;
-        System.out.println("uid: " + uid) ;
-        return userService.forceLogout(uid);
-    }
-
     @GetMapping("/my-account")
     @Operation(description = "나의 프로필 조회.", summary = "MY PROFILE 조회 API")
+    @ApiResponse(responseCode = "200", description = "나의 계정 정보를 조회 합니다.", content = @Content(schema = @Schema(implementation = BcfUser.class)))
     public ResponseEntity<?> findMyAccount (
             HttpServletRequest request
     ) {
@@ -69,11 +43,24 @@ public class UserController {
         return userService.findMyAccount(request);
     }
 
+    @PutMapping("/modify-account")
+    @Operation(description = "회원 정보 수정", summary = "회원 정보 수정 API")
+//    @ApiResponse(responseCode = "200", description = "나의 계정 정보를 조회 합니다.", content = @Content(schema = @Schema(implementation = BcfUser.class)))
+    public ResponseEntity<?> modifyMyAccount (
+            HttpServletRequest request,
+            @RequestBody ModifyMyAccountDto modifyMyAccountDto
+            ) {
+        System.out.println("나의 계정 정보 조회 API");
+        return userService.modifyMyAccount(request, modifyMyAccountDto);
+    }
+
 /*    // 시큐리티 필터 테스트 API
     @PostMapping("/test")
     @Operation(description = "로그인을 통해 발급 받은 Access token을 통해 접근 가능하다.", summary = "Access 토큰 테스트 API")
-    public String test () {
-        System.out.println("token test API 호출");
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = JoinDto.class)))
+    public String mapTestApi (
+            @RequestBody Map<String, String> testMap)
+    {
         return "<h1>test 통과</h1>";
     }*/
 

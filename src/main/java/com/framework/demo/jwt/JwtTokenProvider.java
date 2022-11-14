@@ -2,7 +2,6 @@ package com.framework.demo.jwt;
 
 import com.framework.demo.domain.BcfUser;
 import com.framework.demo.mapper.user.UserMapper;
-import com.framework.demo.model.user.vo.UserVo;
 import com.framework.demo.repository.user.UserRepository;
 import com.framework.demo.service.security.impl.UserDetailServiceImpl;
 import io.jsonwebtoken.Claims;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 
 /**
  *  토큰을 생성하고 검증하는 클래스
@@ -55,6 +53,7 @@ public class JwtTokenProvider {
 
     // JWT 토큰 생성 함수
     public String createToken (String userPk, String role) {
+        System.out.println(">>>>> Access Token 생성");
         Claims claims = Jwts.claims().setSubject(userPk); //JWT payload에 저장되는 정보단위, 보통 여기서 user 식별 값을 넣는다.
         claims.put("roles", role); // 정보는 key / value 쌍으로 저장된다.
         Date now = new Date();
