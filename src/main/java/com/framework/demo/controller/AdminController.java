@@ -1,9 +1,7 @@
 package com.framework.demo.controller;
 
 import com.framework.demo.model.admin.dto.ModifyAccountDto;
-import com.framework.demo.model.user.dto.JoinDto;
 import com.framework.demo.service.admin.AccountManagementService;
-import com.framework.demo.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @RestController

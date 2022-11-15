@@ -1,6 +1,6 @@
 package com.framework.demo.controller;
 
-import com.framework.demo.domain.BcfUser;
+import com.framework.demo.domain.User;
 import com.framework.demo.model.user.dto.JoinDto;
 import com.framework.demo.model.user.dto.ModifyMyAccountDto;
 import com.framework.demo.service.user.UserService;
@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
@@ -26,16 +27,16 @@ public class UserController {
 
     @PostMapping("/join")
     @Operation(description = "회원가입을 진행 합니다.", summary = "회원가입 API")
-    public ResponseEntity<?> join(@RequestBody JoinDto joinDto
-//                                  @RequestHeader(value = 'serviceId', defaultValue = "bluchipFramework") String value
+    public ResponseEntity<?> join(
+                                  @RequestBody JoinDto joinDto
     ) {
-        log.info("회원가입 API 호출");
+        System.out.println("회원 가입 API");
         return userService.join(joinDto);
     }
 
     @GetMapping("/my-account")
     @Operation(description = "나의 프로필 조회.", summary = "MY PROFILE 조회 API")
-    @ApiResponse(responseCode = "200", description = "나의 계정 정보를 조회 합니다.", content = @Content(schema = @Schema(implementation = BcfUser.class)))
+    @ApiResponse(responseCode = "200", description = "나의 계정 정보를 조회 합니다.", content = @Content(schema = @Schema(implementation = User.class)))
     public ResponseEntity<?> findMyAccount (
             HttpServletRequest request
     ) {

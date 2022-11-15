@@ -116,6 +116,7 @@ public class JdbcConfig {
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         sessionFactory.setMapperLocations(resolver.getResources("mybatis/mappers/**/*.xml"));
         SqlSessionFactory factory = sessionFactory.getObject();
+        // 테스트
         factory.getConfiguration().setMapUnderscoreToCamelCase(true);
         return sessionFactory.getObject();
     }

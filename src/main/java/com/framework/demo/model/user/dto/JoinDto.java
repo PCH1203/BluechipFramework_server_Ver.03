@@ -1,9 +1,7 @@
 package com.framework.demo.model.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.Data;
 
 import javax.validation.constraints.Email;

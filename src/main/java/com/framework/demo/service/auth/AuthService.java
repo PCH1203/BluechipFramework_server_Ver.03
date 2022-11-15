@@ -1,8 +1,8 @@
 package com.framework.demo.service.auth;
 
-import com.framework.demo.domain.BcfAuthorities;
-import com.framework.demo.domain.BcfLogin;
-import com.framework.demo.domain.BcfUser;
+import com.framework.demo.domain.Authorities;
+import com.framework.demo.domain.Login;
+import com.framework.demo.domain.User;
 import com.framework.demo.jwt.JwtTokenProvider;
 import com.framework.demo.mapper.auth.AuthMapper;
 import com.framework.demo.mapper.user.UserMapper;
@@ -45,7 +45,7 @@ public class AuthService {
     public ResponseEntity<?> login(HttpServletRequest request, String userEmail, String password) {
 
         // 1. 회원 가입 여부 확인
-        BcfUser member = userRepository.findByUserEmail(userEmail);
+        User member = userRepository.findByUserEmail(userEmail);
 
         String loginDt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 
@@ -62,7 +62,7 @@ public class AuthService {
                 int failCnt = userRepository.findByUid(member.getUid()).getPasswordFailCnt();
 
                 if(failCnt >= 10) {
-                    userRepository.updateLockYnByUid(member.getUid());
+                    userRepository.modifyLockYnByUid(member.getUid());
                     return new ResponseEntity(new MessageResponseDto(1, "비밀번호 실패 횟수" + failCnt +"회, 계정 잠김"), HttpStatus.OK);
                 }
                 return new ResponseEntity(new MessageResponseDto(1, "비밀번호를 확인하세요. 비밀번호 실패 횟수 " + failCnt +"회."), HttpStatus.OK);
@@ -76,7 +76,7 @@ public class AuthService {
                 }
 
                 // 로그인 상태 확인
-                BcfLogin loginStatus = loginRepository.findByUid(member.getUid());
+                Login loginStatus = loginRepository.findByUid(member.getUid());
 
                 if (loginStatus != null && loginStatus.getIsLogin().equals("Y")) {
                     return new ResponseEntity(new MessageResponseDto(1, "이미 로그인된 계정 입니다."), HttpStatus.OK);
@@ -88,15 +88,17 @@ public class AuthService {
                     loginInfo.setRefreshToken(jwtTokenProvider.createRefreshToken(member.getUserEmail(), member.getRole()));
                     loginInfo.setUserId(member.getUserEmail());
                     loginInfo.setName(member.getName());
+                    loginInfo.setPhone(member.getPhone());
 
-                    BcfAuthorities bcfAuthorities = BcfAuthorities.builder()
+
+                    Authorities authorities = Authorities.builder()
                             .uid(member.getUid())
                             .refreshToken(loginInfo.getRefreshToken())
                             .createDt(loginDt)
                             .build();
 
                     // RefreshToken 저장.
-                    authRepository.save(bcfAuthorities);
+                    authRepository.save(authorities);
                     // bcf_login.isLogin 변경.
                     loginRepository.modifyIsLogin("Y", loginDt ,loginStatus.getUid());
                     // 로그인 실패횟수 초기화.
@@ -111,23 +113,24 @@ public class AuthService {
                     loginInfo.setRefreshToken(jwtTokenProvider.createRefreshToken(member.getUserEmail(), member.getRole()));
                     loginInfo.setUserId(member.getUserEmail());
                     loginInfo.setName(member.getName());
+                    loginInfo.setPhone(member.getPhone());
 
-                    BcfAuthorities bcfAuthorities = BcfAuthorities.builder()
+                    Authorities authorities = Authorities.builder()
                             .uid(member.getUid())
                             .refreshToken(loginInfo.getRefreshToken())
                             .createDt(loginDt)
                             .build();
 
-                    BcfLogin bcfLogin = BcfLogin.builder()
+                    Login login = Login.builder()
                             .uid(member.getUid())
                             .isLogin("Y")
                             .createDt(loginDt)
                             .build();
 
                     // RefreshToken 저장.
-                    authRepository.save(bcfAuthorities);
+                    authRepository.save(authorities);
                     // Login 상태 저장.
-                    loginRepository.save(bcfLogin);
+                    loginRepository.save(login);
 
                     return new ResponseEntity(new MessageResponseDto(loginInfo, "로그인 성공"), HttpStatus.OK);
                 }
@@ -204,4 +207,6 @@ public class AuthService {
         }
         return new ResponseEntity(new MessageResponseDto(1, "리프레시 토큰 만료 다시 로그인 필요"), HttpStatus.OK);
     }
+
+
 }

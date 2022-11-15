@@ -12,15 +12,15 @@ import javax.persistence.Entity;
 
 @Builder
 @Data
-@Entity(name = "BCF_SESSION")
-@Table(name = "BCF_SESSION")
+@Entity(name = "session")
+@Table(name = "session")
 @NoArgsConstructor
 @AllArgsConstructor
-public class BcfSession {
+public class Session {
     @javax.persistence.Id
-    @javax.persistence.Column(name ="UID", length = 20, nullable = false)
+    @javax.persistence.Column(name ="uid", length = 20, nullable = false)
     @Id
-    @Column("UID")
+    @Column("uid")
     private String uid;
 
     @javax.persistence.Column(name = "access_ip", nullable = false, length = 100, unique = true)

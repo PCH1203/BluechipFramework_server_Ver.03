@@ -12,28 +12,28 @@ import javax.persistence.Entity;
 
 @Builder
 @Data
-@Entity(name = "BCF_AUTHORITIES")
-@Table(name = "BCF_AUTHORITIES")
+@Entity(name = "authorities")
+@Table(name = "authorities")
 @NoArgsConstructor
 @AllArgsConstructor
-public class BcfAuthorities {
+public class Authorities {
 
     @javax.persistence.Id
-    @javax.persistence.Column(name ="UID", length = 20, nullable = false)
+    @javax.persistence.Column(name ="uid", length = 20, nullable = false)
     @Id
-    @Column("UID")
+    @Column("uid")
     private String uid;
 
-    @javax.persistence.Column(name = "REFRESH_TOKEN")
-    @Column("REFRESH_TOKEN")
+    @javax.persistence.Column(name = "refresh_token")
+    @Column("refresh_token")
     private String refreshToken;
 
-    @javax.persistence.Column(name = "CREATE_DT", length = 40, nullable = false)
-    @Column("CREATE_DT")
+    @javax.persistence.Column(name = "create_dt", length = 40, nullable = false)
+    @Column("create_dt")
     private String createDt;
 
-    @javax.persistence.Column(name = "UPDATE_DT", length = 40, nullable = true)
-    @Column("UPDATE_DT")
+    @javax.persistence.Column(name = "update_dt", length = 40, nullable = true)
+    @Column("update_dt")
     private String updateDt;
 
 

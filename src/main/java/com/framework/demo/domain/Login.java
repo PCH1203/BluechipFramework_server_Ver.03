@@ -12,30 +12,28 @@ import javax.persistence.Entity;
 
 @Builder
 @Data
-@Entity(name = "BCF_LOGIN")
-@Table(name = "BCF_LOGIN")
+@Entity(name = "login")
+@Table(name = "login")
 @NoArgsConstructor
 @AllArgsConstructor
-public class BcfLogin {
+public class Login {
 
     @javax.persistence.Id
-    @javax.persistence.Column(name ="UID", length = 20, nullable = false)
+    @javax.persistence.Column(name ="uid", length = 20, nullable = false)
     @Id
-    @Column("UID")
+    @Column("uid")
     private String uid;
 
-    @javax.persistence.Column(name = "IS_LOGIN", length = 2,  columnDefinition = "varchar(2) default 'Y'")
-    @Column("IS_LOGIN")
+    @javax.persistence.Column(name = "is_login", length = 2,  columnDefinition = "varchar(2) default 'Y'")
+    @Column("is_login")
     private String isLogin;
 
-    @javax.persistence.Column(name = "CREATE_DT", length = 40, nullable = true)
-    @Column("CREATE_DT")
+    @javax.persistence.Column(name = "create_dt", length = 40, nullable = true)
+    @Column("create_dt")
     private String createDt;
 
-    @javax.persistence.Column(name = "UPDATE_DT", length = 40, nullable = true)
-    @Column("UPDATE_DT")
+    @javax.persistence.Column(name = "update_dt", length = 40, nullable = true)
+    @Column("update_dt")
     private String updateDt;
-
-
 
 }

@@ -5,30 +5,30 @@
 
     <select id="findUserByUid" resultType="com.framework.demo.model.user.vo.UserVo">
         SELECT *
-        FROM BCF_USER
+        FROM USER
         WHERE UID = #{uid}
     </select>
 
     <select id="findUserByPhone" resultType="com.framework.demo.model.user.vo.UserVo">
         SELECT *
-        FROM BCF_USER
+        FROM USER
         WHERE PHONE = #{phone}
     </select>
 
     <select id="findUserByUsername" resultType="com.framework.demo.model.user.vo.UserVo">
         SELECT *
-        FROM  BCF_USER
+        FROM  USER
         WHERE USER_EMAIL = #{username}
     </select>
 
     <select id="findUserByUserEmail" resultType="com.framework.demo.model.user.vo.UserVo">
         SELECT *
-        FROM  BCF_USER
+        FROM  USER
         WHERE USER_EMAIL = #{userEmail}
     </select>
 
     <insert id="join" parameterType="com.framework.demo.model.user.dto.JoinDto">
-        INSERT INTO BCF_USER
+        INSERT INTO USER
         (
         UID,
         USER_EMAIL,
@@ -55,7 +55,7 @@
     </insert>
 
     <insert id="addSession" parameterType="com.framework.demo.model.user.dto.AddSessionDto">
-        INSERT INTO BCF_SESSION
+        INSERT INTO SESSION
         (
         UID,
         ACCESS_IP,

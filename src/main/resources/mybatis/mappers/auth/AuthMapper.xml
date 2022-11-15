@@ -5,26 +5,26 @@
 
     <select id="findByRefreshToken" resultType="String">
         SELECT *
-        FROM BCF_AUTHORITIES
+        FROM AUTHORITIES
         WHERE REFRESH_TOKEN = #{refreshToken}
     </select>
 
     <update id="removeRefreshToken" parameterType="com.framework.demo.model.user.dto.IsLoginDto">
-        UPDATE BCF_AUTHORITIES
+        UPDATE AUTHORITIES
         SET REFRESH_TOKEN = "",
         UPDATE_DT = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
         WHERE UID = #{uid}
     </update>
 
     <update id="modifyRefreshToken">
-        UPDATE BCF_AUTHORITIES
+        UPDATE AUTHORITIES
         SET REFRESH_TOKEN = #{refreshToken},
         UPDATE_DT = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
         WHERE UID = #{uid}
     </update>
 
     <insert id="saveRefreshToken">
-        INSERT INTO BCF_AUTHORITIES
+        INSERT INTO AUTHORITIES
         (
         UID,
         REFRESH_TOKEN,

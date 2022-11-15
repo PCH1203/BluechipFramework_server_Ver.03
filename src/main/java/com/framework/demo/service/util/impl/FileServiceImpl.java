@@ -1,7 +1,7 @@
 package com.framework.demo.service.util.impl;
 
-import com.framework.demo.domain.BcfFile;
-import com.framework.demo.domain.BcfUser;
+import com.framework.demo.domain.File;
+import com.framework.demo.domain.User;
 import com.framework.demo.jwt.JwtTokenProvider;
 import com.framework.demo.model.MessageResponseDto;
 import com.framework.demo.repository.util.FileRepository;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
@@ -43,7 +42,7 @@ public class FileServiceImpl implements FileService {
 //        UserVo userInfo = jwtTokenProvider.findUserInfoByRequest(request);
 
         // request header의 userPk로 유저 정보 조회
-        BcfUser userInfo = jwtTokenProvider.findUserInfoByRequest(request);
+        User userInfo = jwtTokenProvider.findUserInfoByRequest(request);
 
         // 원래 파일 이름 추출.
         String origName = file.getOriginalFilename();
@@ -60,7 +59,7 @@ public class FileServiceImpl implements FileService {
 
         System.out.println(">>>>> uploadDt: " + uploadDt);
         //파일 빌더 생성
-        BcfFile bcfFile = BcfFile.builder()
+        File bcfFile = File.builder()
                 .uploader(userInfo.getUid())
                 .originName(origName)
                 .savedName(savedName)
@@ -69,9 +68,9 @@ public class FileServiceImpl implements FileService {
                 .build();
 
         // File path에 파일 복사
-        file.transferTo(new File(savePath));
+        file.transferTo(new java.io.File(savePath));
         //DB에 파일 명세 저장.
-        BcfFile savedFile = fileRepository.save(bcfFile);
+        File savedFile = fileRepository.save(bcfFile);
 
         return new ResponseEntity(new MessageResponseDto(savedFile.getId(),"파일 저장 성공"), HttpStatus.OK);
     }
@@ -82,7 +81,7 @@ public class FileServiceImpl implements FileService {
         System.out.println("파일 삭제 IMPL");
 
         // request header의 userPk로 유저 정보 조회
-        BcfUser userInfo = jwtTokenProvider.findUserInfoByRequest(request);
+        User userInfo = jwtTokenProvider.findUserInfoByRequest(request);
 
         Path savedPath = Paths.get(filePath);
 

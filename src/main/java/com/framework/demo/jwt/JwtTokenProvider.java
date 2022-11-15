@@ -1,6 +1,6 @@
 package com.framework.demo.jwt;
 
-import com.framework.demo.domain.BcfUser;
+import com.framework.demo.domain.User;
 import com.framework.demo.mapper.user.UserMapper;
 import com.framework.demo.repository.user.UserRepository;
 import com.framework.demo.service.security.impl.UserDetailServiceImpl;
@@ -99,7 +99,7 @@ public class JwtTokenProvider {
     }
 
     // 토큰에서 회원 정보 추출
-    public BcfUser findUserInfoByRequest(HttpServletRequest request) {
+    public User findUserInfoByRequest(HttpServletRequest request) {
         System.out.println("request Header -> token -> userEmail -> uid 추출: ");
         System.out.println("Authorization: " + request.getHeader("Authorization"));
         String token = resolveToken(request);

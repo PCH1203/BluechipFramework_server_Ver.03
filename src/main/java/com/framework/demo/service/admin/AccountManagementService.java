@@ -1,6 +1,6 @@
 package com.framework.demo.service.admin;
 
-import com.framework.demo.domain.BcfUser;
+import com.framework.demo.domain.User;
 import com.framework.demo.model.MessageResponseDto;
 import com.framework.demo.model.admin.dto.ModifyAccountDto;
 import com.framework.demo.repository.auth.AuthRepository;
@@ -44,11 +44,11 @@ public class AccountManagementService {
 
         // 사용자 이름 변경 테스트
 
-        int a = userRepository.modifyName(modifyAccountDto.getUid(), modifyAccountDto.getName());
+//        userRepository.modifyName(modifyAccountDto.getUid(), modifyAccountDto.getName());
 
 
 
-        return new ResponseEntity(new MessageResponseDto(a,"사용자 정보를 변경하였습니다."), HttpStatus.OK);
+        return new ResponseEntity(new MessageResponseDto(1,"사용자 정보를 변경하였습니다."), HttpStatus.OK);
 
     }
     /**
@@ -59,25 +59,25 @@ public class AccountManagementService {
     public ResponseEntity<?> forceLogout(String userId) {
 
         // BcfUser 에서 유저 정보 조회
-        BcfUser bcfUser = userRepository.findByUserEmail(userId);
+        User user = userRepository.findByUserEmail(userId);
 
-        if(bcfUser != null) {
+        if(user != null) {
 
-            String isLogin = loginRepository.findByUid(bcfUser.getUid()).getIsLogin();
+            String isLogin = loginRepository.findByUid(user.getUid()).getIsLogin();
 
             if(isLogin.equals("Y")) {
                 // 로그아웃 시간 초기화
                 String logoutDt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 
                 // bcfLogin.isLogin = 'N'으로 수정
-                loginRepository.modifyIsLogin("N", logoutDt, bcfUser.getUid());
+                loginRepository.modifyIsLogin("N", logoutDt, user.getUid());
                 // bcfAuthorities.refreshToken 삭제
-                authRepository.updateRefreshToken(bcfUser.getUid(),"", logoutDt);
+                authRepository.updateRefreshToken(user.getUid(),"", logoutDt);
 
-                return new ResponseEntity(new MessageResponseDto(bcfUser.getUserEmail(), "로그아웃 완료"), HttpStatus.OK);
+                return new ResponseEntity(new MessageResponseDto(user.getUserEmail(), "로그아웃 완료"), HttpStatus.OK);
 
             } else {
-                return new ResponseEntity(new MessageResponseDto(bcfUser.getUserEmail(), "이미 로그아웃 상태 입니다."), HttpStatus.OK);
+                return new ResponseEntity(new MessageResponseDto(user.getUserEmail(), "이미 로그아웃 상태 입니다."), HttpStatus.OK);
             }
         } else {
             return new ResponseEntity(new MessageResponseDto(userId, "사용자를 찾을 수 없습니다."), HttpStatus.OK);
