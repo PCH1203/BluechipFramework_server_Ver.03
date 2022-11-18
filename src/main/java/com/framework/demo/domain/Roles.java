@@ -18,14 +18,14 @@ import javax.persistence.GenerationType;
 @Table(name = "role_category")
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoleCategory {
+public class Roles {
 
     @javax.persistence.Id
     @javax.persistence.Column(name ="id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column("id")
-    private Long id;
+    private Integer id;
 
     @javax.persistence.Column(name = "role", nullable = false)
     @Column("role")

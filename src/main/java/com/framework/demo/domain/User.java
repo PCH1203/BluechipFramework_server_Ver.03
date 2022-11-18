@@ -11,6 +11,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import javax.persistence.Entity;
+import javax.validation.constraints.Email;
 
 @Builder
 @Data
@@ -28,6 +29,7 @@ public class User {
     private String uid;
 
     @javax.persistence.Column(name = "user_email", nullable = false, length = 100, unique = true)
+    @Email
     @Column("user_email")
     @Schema(description = "사용자 이메일(ID)", example = "chanho1203@naver.com")
     private String userEmail;
@@ -51,25 +53,21 @@ public class User {
     @Column("type")
     private String type;
 
-    @javax.persistence.Column(name = "role", length = 20, nullable = false)
-    @Schema(description = "role(admin, user)", example = "user")
-    @Column("role")
-    private String role;
-
-    @javax.persistence.Column(name = "sub_role", nullable = false, columnDefinition = "varchar(20) default 'general'")
-    @Schema(description = "subRole(general, master, manager)", example = "general")
-    @Column("sub_role")
-    private String subRole;
+    @javax.persistence.Column(name = "role_id")
+    @Schema(description = "", example = "user")
+    @ColumnDefault("4")
+    @Column("role_id")
+    private Integer roleId;
 
     @javax.persistence.Column(name = "password_fail_cnt", length = 22)
     @Column("password_fail_cnt")
     @ColumnDefault("0")
     private int passwordFailCnt;
 
-    @javax.persistence.Column(name = "lock_yn", length = 4, columnDefinition = "varchar(1) default 'N'")
-    @Schema(description = "lock_yn", example = "N")
-    @Column("lock_yn")
-    private String lockYn;
+    @javax.persistence.Column(name = "lock_yns", columnDefinition = "varchar(15) default 'N'")
+    @Schema(description = "lock_yns", example = "N")
+    @Column("lock_yns")
+    private String lockYns;
 
     @javax.persistence.Column(name = "create_dt", length = 40, nullable = false)
     @Column("create_dt")

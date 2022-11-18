@@ -9,6 +9,8 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import javax.persistence.Entity;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Builder
 @Data
@@ -28,9 +30,9 @@ public class Login {
     @Column("is_login")
     private String isLogin;
 
-    @javax.persistence.Column(name = "create_dt", length = 40, nullable = true)
+    @javax.persistence.Column(name = "create_dt")
     @Column("create_dt")
-    private String createDt;
+    private String createDt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 
     @javax.persistence.Column(name = "update_dt", length = 40, nullable = true)
     @Column("update_dt")

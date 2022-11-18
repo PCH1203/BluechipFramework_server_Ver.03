@@ -17,8 +17,8 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/framework/api/util")
 @RequiredArgsConstructor
-@Tag(name = "[UTIL] File Management", description = "File Controller (해당 API는 JPA로 동작합니다.)")
-public class FileController {
+@Tag(name = "[UTIL] Utility Management", description = "Utility")
+public class UtilController {
 
     private final FileService fileService;
 
@@ -28,7 +28,6 @@ public class FileController {
             @RequestParam(required = true) @Parameter(description = "업로드할 파일") MultipartFile file,
             HttpServletRequest request
     ) throws IOException {
-        System.out.println(">>>>> 파일 업로드 API 실행");
         return fileService.uploadFile(file, request);
     }
 
@@ -39,7 +38,6 @@ public class FileController {
             @RequestParam(required = true) @Parameter(description = "FILE PATH + UUID") String filePath
             , HttpServletRequest request
     ) throws IOException {
-        System.out.println(">>>>> 파일 삭제 API 실행");
         return fileService.removeFile(fileId, filePath, request);
     }
 

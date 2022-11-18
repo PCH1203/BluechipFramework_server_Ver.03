@@ -18,13 +18,13 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/v2/api/framework/auth")
 @RequiredArgsConstructor
-@Tag(name = "[AUTH] 인증/인가 클래스", description = "Auth Controller")
+@Tag(name = "[AUTH] Authentication / Authorization", description = "계정 인증 / 인가")
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/login")
-    @Operation(description = "로그인 성공시 Access Token, Refresh Token 발급", summary = "로그인 API")
-    public ResponseEntity<?> login (
+    @PostMapping("/token/login")
+    @Operation(description = "로그인 성공시 Access Token, Refresh Token 발급", summary = " Token 로그인 API")
+    public ResponseEntity<?> appLogin (
             HttpServletRequest request,
             @RequestParam(required = true) @Parameter(description = "아이디")String userEmail,
             @RequestParam(required = true) @Parameter(description = "비밀번호")String password
@@ -35,17 +35,22 @@ public class AuthController {
     @PostMapping("/logout")
     @Operation(description = "로그아웃시 IsLogin status 값 변경 및 RefreshToken 삭제", summary = "로그아웃 API")
     public ResponseEntity<?> logout (HttpServletRequest request) {
-        log.trace("로그아웃 API 호출");
-        System.out.println("request.AccessToken: " + request.getHeader("Authorization"));
         return authService.logout(request);
     }
-
     @PostMapping("/token-refresh")
     @Operation(description = "Access token을 갱신 합니다.", summary = "토큰 리프래쉬 API")
-    public ResponseEntity<?> tokenRefresh(HttpServletRequest request) {       
-        log.info("Token Refresh API 호출");
-        System.out.println("Refresh Token: " + request.getHeader("Authorization"));
+    public ResponseEntity<?> tokenRefresh(HttpServletRequest request) {
         return authService.tokenRefresh(request);
+    }
+
+    @PostMapping("/session/login")
+    @Operation(description = "Session 로그인", summary = " session 로그인 API")
+    public ResponseEntity<?> webLogin (
+            HttpServletRequest request,
+            @RequestParam(required = true) @Parameter(description = "아이디")String userEmail,
+            @RequestParam(required = true) @Parameter(description = "비밀번호")String password
+    ) {
+        return authService.webLogin(request, userEmail, password);
     }
 
 }

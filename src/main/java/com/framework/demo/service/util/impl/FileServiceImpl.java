@@ -38,9 +38,6 @@ public class FileServiceImpl implements FileService {
     @Override
     public ResponseEntity<?> uploadFile(MultipartFile file, HttpServletRequest request) throws IOException {
 
-//        // request header의 userPk로 유저 정보 조회
-//        UserVo userInfo = jwtTokenProvider.findUserInfoByRequest(request);
-
         // request header의 userPk로 유저 정보 조회
         User userInfo = jwtTokenProvider.findUserInfoByRequest(request);
 
@@ -55,16 +52,15 @@ public class FileServiceImpl implements FileService {
         // 파일 저장 경로
         String savePath = fileDir + savedName;
         // upLoad 시간 설정
-        String uploadDt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddsHHmmss"));
+//        String uploadDt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddsHHmmss"));
 
-        System.out.println(">>>>> uploadDt: " + uploadDt);
         //파일 빌더 생성
         File bcfFile = File.builder()
                 .uploader(userInfo.getUid())
                 .originName(origName)
                 .savedName(savedName)
                 .savedPath(savePath)
-                .createDt(uploadDt)
+//                .createDt(uploadDt)
                 .build();
 
         // File path에 파일 복사

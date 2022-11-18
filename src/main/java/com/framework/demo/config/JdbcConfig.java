@@ -1,5 +1,6 @@
 package com.framework.demo.config;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -24,6 +25,7 @@ import java.util.Properties;
 @Slf4j
 @Configuration
 @EntityScan
+@RequiredArgsConstructor
 @MapperScan(value = "com.framework.demo.mapper.**")
 public class JdbcConfig {
 
@@ -38,6 +40,9 @@ public class JdbcConfig {
 
     @Value("${db.password}")
     private String passwd;
+
+
+//    private final Environment env;
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
@@ -87,7 +92,6 @@ public class JdbcConfig {
     @Bean
     public BasicDataSource getDataSource() {
         BasicDataSource dataSource = new BasicDataSource();
-//        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource.setDriverClassName(driver);
         dataSource.setUrl(url);
         dataSource.setUsername(userId);

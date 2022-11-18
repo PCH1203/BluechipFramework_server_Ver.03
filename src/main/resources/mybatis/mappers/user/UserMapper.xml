@@ -35,8 +35,9 @@
         PASSWORD,
         NAME,
         PHONE,
-        ROLE,
-        SUB_ROLE,
+        ROLE_ID,
+<!--        ROLE,-->
+<!--        SUB_ROLE,-->
         TYPE,
         CREATE_DT
         )
@@ -47,8 +48,9 @@
         #{password},
         #{name},
         #{phone},
-        #{role},
-        #{subRole},
+        #{roleId},
+<!--        #{role},-->
+<!--        #{subRole},-->
         #{type},
         DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
         )

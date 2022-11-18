@@ -10,16 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-//@SecurityScheme(
-////        name = "Bearer Authentication",
-//        name = "Authentication",
-//        type = SecuritySchemeType.HTTP,
-//        bearerFormat = "JWT",
-//        scheme = "bearer"
-//)
 public class SwaggerConfig {
-
-
 
     @Value("${springdoc.swagger-ui.mainDescription}")
     String mainDescription;
@@ -50,13 +41,6 @@ public class SwaggerConfig {
                 .addSecurityItem(securityRequirement)
                 .components(components);
 
-
-
     };
-
-
-
-
-
 
 }

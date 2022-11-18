@@ -29,6 +29,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web-services'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
 
+	// API 파라미터 유효성 @Valid (유효성 검사) 사용을 위한 라이브러리
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 	// OpenApi (swagger-ui)
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.11'
 
@@ -41,7 +44,11 @@ dependencies {
 	// build.gradle
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.7.1'
 
-
+	// Junit의 클래스와 메소드들을 사용하기 위한 API
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+	testCompileOnly 'junit:junit:4.12'
+	testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.3.1'
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -49,6 +56,10 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+test {
+	useJUnitPlatform()
 }
 
 tasks.named('test') {

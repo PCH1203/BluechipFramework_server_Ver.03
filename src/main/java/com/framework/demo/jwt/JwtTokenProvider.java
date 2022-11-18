@@ -39,9 +39,9 @@ public class JwtTokenProvider {
 
     // 토큰 유효시간 30분
     private long tokenValidTime = 30 * 60 * 1000L;
-//    private long tokenValidTime = 30 * 60 * 1000L;
     // 리프레시 유효시간 24시간
     private long refreshTokenValidTime = 60 * 60 * 24 * 1000L;
+//    private long refreshTokenValidTime = 30 * 60 * 1000L;
 
     private final UserDetailsService userDetailsService;
     private final UserDetailServiceImpl userDetailServiceImpl;
@@ -52,10 +52,11 @@ public class JwtTokenProvider {
     }
 
     // JWT 토큰 생성 함수
-    public String createToken (String userPk, String role) {
+    public String createToken (String userPk, int roleId) {
+//    public String createToken (String userPk, String role) {
         System.out.println(">>>>> Access Token 생성");
         Claims claims = Jwts.claims().setSubject(userPk); //JWT payload에 저장되는 정보단위, 보통 여기서 user 식별 값을 넣는다.
-        claims.put("roles", role); // 정보는 key / value 쌍으로 저장된다.
+        claims.put("roles", roleId); // 정보는 key / value 쌍으로 저장된다.
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims) // 정보 저장
@@ -66,9 +67,10 @@ public class JwtTokenProvider {
     }
 
     //JWT 리프레시 토큰 생성
-    public String createRefreshToken (String userPk, String role) {
+    public String createRefreshToken (String userPk, int roleId) {
+//    public String createRefreshToken (String userPk, String role) {
         Claims claims = Jwts.claims().setSubject(userPk); //JWT payload에 저장되는 정보단위, 보통 여기서 user 식별 값을 넣는다.
-        claims.put("roles", role); // 정보는 key / value 쌍으로 저장된다.
+        claims.put("roles", roleId); // 정보는 key / value 쌍으로 저장된다.
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims) // 정보 저장

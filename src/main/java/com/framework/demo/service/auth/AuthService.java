@@ -2,6 +2,7 @@ package com.framework.demo.service.auth;
 
 import com.framework.demo.domain.Authorities;
 import com.framework.demo.domain.Login;
+import com.framework.demo.domain.Session;
 import com.framework.demo.domain.User;
 import com.framework.demo.jwt.JwtTokenProvider;
 import com.framework.demo.mapper.auth.AuthMapper;
@@ -10,6 +11,7 @@ import com.framework.demo.model.MessageResponseDto;
 import com.framework.demo.model.user.vo.LoginVo;
 import com.framework.demo.model.user.vo.UserVo;
 import com.framework.demo.repository.auth.AuthRepository;
+import com.framework.demo.repository.session.SessionRepository;
 import com.framework.demo.repository.user.LoginRepository;
 import com.framework.demo.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,8 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -33,7 +37,11 @@ public class AuthService {
     private final UserRepository userRepository;
     private final LoginRepository loginRepository;
     private final AuthRepository authRepository;
+    private final AuthBaseService authBaseService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    private final SessionRepository sessionRepository;
+
+
 
     /**
      * 로그인 API 입니다.
@@ -42,7 +50,7 @@ public class AuthService {
      * @param password
      * @return
      */
-    public ResponseEntity<?> login(HttpServletRequest request, String userEmail, String password) {
+    public ResponseEntity<?> login(HttpServletRequest request, String userEmail, String password)  {
 
         // 1. 회원 가입 여부 확인
         User member = userRepository.findByUserEmail(userEmail);
@@ -71,7 +79,7 @@ public class AuthService {
             } else {
         
                 // 계정 잠김 상태 확인
-                if(userRepository.findByUid(member.getUid()).getLockYn().equals("Y")) {
+                if(userRepository.findByUid(member.getUid()).getLockYns().equals("Y")) {
                     return new ResponseEntity(new MessageResponseDto(1, "비밀번호 실패 횟수를 초과하여 로그인 할 수 없습니다."), HttpStatus.OK);
                 }
 
@@ -83,9 +91,11 @@ public class AuthService {
 
                 } else if (loginStatus != null && loginStatus.getIsLogin().equals("N")) {
                     // Access token 발급
-                    loginInfo.setAccessToken(jwtTokenProvider.createToken(member.getUserEmail(), member.getRole()));
+                    loginInfo.setAccessToken(jwtTokenProvider.createToken(member.getUserEmail(), member.getRoleId()));
+//                    loginInfo.setAccessToken(jwtTokenProvider.createToken(member.getUserEmail(), member.getRole()));
                     // Refresh token 발급
-                    loginInfo.setRefreshToken(jwtTokenProvider.createRefreshToken(member.getUserEmail(), member.getRole()));
+                    loginInfo.setRefreshToken(jwtTokenProvider.createRefreshToken(member.getUserEmail(), member.getRoleId()));
+//                    loginInfo.setRefreshToken(jwtTokenProvider.createRefreshToken(member.getUserEmail(), member.getRole()));
                     loginInfo.setUserId(member.getUserEmail());
                     loginInfo.setName(member.getName());
                     loginInfo.setPhone(member.getPhone());
@@ -108,9 +118,10 @@ public class AuthService {
 
                 } else {
                     // Access token 발급
-                    loginInfo.setAccessToken(jwtTokenProvider.createToken(member.getUserEmail(), member.getRole()));
+                    loginInfo.setAccessToken(jwtTokenProvider.createToken(member.getUserEmail(), member.getRoleId()));
+//                    loginInfo.setAccessToken(jwtTokenProvider.createToken(member.getUserEmail(), member.getRole()));
                     // Refresh token 발급
-                    loginInfo.setRefreshToken(jwtTokenProvider.createRefreshToken(member.getUserEmail(), member.getRole()));
+                    loginInfo.setRefreshToken(jwtTokenProvider.createRefreshToken(member.getUserEmail(), member.getRoleId()));
                     loginInfo.setUserId(member.getUserEmail());
                     loginInfo.setName(member.getName());
                     loginInfo.setPhone(member.getPhone());
@@ -124,7 +135,7 @@ public class AuthService {
                     Login login = Login.builder()
                             .uid(member.getUid())
                             .isLogin("Y")
-                            .createDt(loginDt)
+//                            .createDt(loginDt)
                             .build();
 
                     // RefreshToken 저장.
@@ -197,7 +208,7 @@ public class AuthService {
                 // uid를 통해 userInfo 조회
                 UserVo userInfo = userMapper.findUserByUid(uid);
                 
-                String newAccessToken = jwtTokenProvider.createToken(userInfo.getUserEmail(), userInfo.getRole());
+                String newAccessToken = jwtTokenProvider.createToken(userInfo.getUserEmail(), userInfo.getRoleId());
                 log.info("신규 엑세스 토큰 발급");
                 return new ResponseEntity(new MessageResponseDto(newAccessToken, "Access token 재발급"), HttpStatus.OK);
 
@@ -207,6 +218,60 @@ public class AuthService {
         }
         return new ResponseEntity(new MessageResponseDto(1, "리프레시 토큰 만료 다시 로그인 필요"), HttpStatus.OK);
     }
+
+    /**
+     * Session 방식 로그인 (web)
+     * @param request
+     * @param userId
+     * @param password
+     * @return
+     */
+    public ResponseEntity<?> webLogin(HttpServletRequest request, String userId, String password) {
+
+        User member = userRepository.findByUserEmail(userId);
+        String loginDt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+
+        if(member == null) {
+            return new ResponseEntity(new MessageResponseDto(0,"사용자를 찾을 수 없습니다."), HttpStatus.OK);
+        }
+
+        if(!bCryptPasswordEncoder.matches(password, member.getPassword())) {
+            return authBaseService.passwordFailManagement(member.getUid());
+        }
+        // 계정 잠김 상태 확인
+        if(userRepository.findByUid(member.getUid()).getLockYns().equals("Y")) {
+            return new ResponseEntity(new MessageResponseDto(1, "비밀번호 실패 횟수를 초과하여 로그인 할 수 없습니다."), HttpStatus.OK);
+        }
+        // 로그인 상태 확인
+        Login loginStatus = loginRepository.findByUid(member.getUid());
+
+        if (loginStatus != null && loginStatus.getIsLogin().equals("Y")) {
+            return new ResponseEntity(new MessageResponseDto(0, "이미 로그인된 계정 입니다."), HttpStatus.OK);
+        }
+
+        Session session = Session.builder()
+                .uid(member.getUid())
+                .sessionId(request.getSession().getId())
+                .accessIp(request.getRemoteAddr())
+                .status("Y")
+                .createDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")))
+                .build();
+        //세션db에 저장
+        sessionRepository.save(session);
+        request.setAttribute("userId", member.getUserEmail());
+        request.setAttribute("password", member.getPassword());
+
+        Map<String,String> resultMap = new HashMap<>();
+
+        resultMap.put("UserId", member.getUserEmail());
+        resultMap.put("SessionId", session.getSessionId());
+        resultMap.put("AccessIp", session.getAccessIp());
+
+        return new ResponseEntity(new MessageResponseDto(resultMap, "세션로그인 테스트"), HttpStatus.OK);
+    }
+
+
+
 
 
 }

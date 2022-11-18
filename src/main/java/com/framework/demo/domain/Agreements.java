@@ -1,25 +1,33 @@
 package com.framework.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Builder
 @Data
-@Entity(name = "file")
-@Table(name = "file")
+@Entity(name = "agreemetns")
+@Table(name = "agreemetns")
+@DynamicInsert
 @NoArgsConstructor
-@AllArgsConstructor // 자동 빌더 생성
-public class File {
+@AllArgsConstructor
+public class Agreements {
 
+    @JsonIgnore
     @javax.persistence.Id
     @javax.persistence.Column(name ="id", length = 20, nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,28 +35,17 @@ public class File {
     @Column("id")
     private Long id;
 
-    @javax.persistence.Column(name = "uploader", nullable = false, length = 100)
-    @Column("uploader")
-    private String uploader;
+    @javax.persistence.Column(name = "title")
+    @Column("title")
+    private String title;
 
-    @javax.persistence.Column(name = "origin_name", nullable = false, length = 100)
-    @Column("origin_name")
-    private String originName;
+    @javax.persistence.Column(name = "contents", columnDefinition = "LONGTEXT")
+    @Column("contents")
+    private String contents;
 
-    @javax.persistence.Column(name = "saved_name", nullable = false, length = 100)
-    @Column("saved_name")
-    private String savedName;
-
-    @javax.persistence.Column(name = "saved_path")
-    @Column("saved_path")
-    private String savedPath;
-
+    @JsonIgnore
     @javax.persistence.Column(name = "create_dt")
     @Column("create_dt")
     private String createDt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-
-    @javax.persistence.Column(name = "update_dt")
-    @Column("update_dt")
-    private String updateDt;
 
 }

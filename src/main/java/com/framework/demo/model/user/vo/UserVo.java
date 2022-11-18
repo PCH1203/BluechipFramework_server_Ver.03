@@ -17,6 +17,7 @@ public class UserVo {
     private String phone;
 //    private List<String> roles;
     private String role;
+    private Integer roleId;
     private String accessToken;
     private String refreshToken;
 

@@ -37,7 +37,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/lib/**", "/html","/framework/**");
+//        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/lib/**", "/html","/framework/**");
+        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/lib/**", "/html");
     }
 
     @Override
@@ -48,9 +49,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .httpBasic().disable()
                 .authorizeRequests()// 요청에 대한 사용 권한 체크
-                .antMatchers("/v2/api/security/user/test").authenticated()
+//                .antMatchers("/framework/api/user/**").authenticated()
                 .antMatchers("/framework/**").permitAll()
-                .antMatchers("/**").permitAll()
+//                .antMatchers("/**").permitAll()
                         .and()
                                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
                                         // JwtAuthenticationFilter를 UsernamePasswordAuthenticationFilter 전에 넣는다

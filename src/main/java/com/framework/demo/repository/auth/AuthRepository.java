@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 public interface AuthRepository extends JpaRepository<Authorities, String> {
@@ -20,6 +21,7 @@ public interface AuthRepository extends JpaRepository<Authorities, String> {
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE authorities a SET a.refresh_token= :refreshToken, a.update_dt= :loginDt WHERE a.uid = :uid",nativeQuery = true)
     void updateRefreshToken(String uid, String refreshToken, String loginDt);
+
 
 
 

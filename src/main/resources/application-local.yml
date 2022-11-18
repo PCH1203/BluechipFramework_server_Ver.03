@@ -1,4 +1,46 @@
+server:
+  port: 8081
+
 #jpa:
+#  properties:
+#    hibernate:
+#      hbm2ddl:
+#        auto: update
+#        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+#        show_sql: true
+#        format_sql: true
+#
+#        jpa:
+#          properties:
+#            hibernate:
+#              hbm2ddl:
+#                auto: update
+#                dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+#                show_sql: true
+#                format_sql: true
+
+
+
+#  jpa:
+#    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+#    open-in-view: true
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: update
+#      naming:
+#        # PhysicalNamingStrategyStandardImpl : 내가 지정한 필드명 그대로 사용한다.
+#        # SpringPhysicalNamingStrategy : 자동으로 내가 지정한 필드를 CamelToe에서 언더바 명명으로 바꿔준다 (emailName->email_name)
+#        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#      # JPA의 기본 넘버링 strategy를 따라가지 않고 연결된 DB의 넘버링을 선택한다 (False)
+#      use-new-id-generator-mappings: false
+#      # console 창에 보여준다 true
+#      show-sql: true
+#      properties:
+#        # console 창에 query보여줄 때 이쁘게 보여준 true
+#        hibernate.format_sql: true
+
+#jpa:
+#  dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 #  open-in-view: true
 #  hibernate:
 #    ddl-auto: update
@@ -13,6 +55,8 @@
 #  properties:
 #    # console 창에 query보여줄 때 이쁘게 보여준 true
 #    hibernate.format_sql: true
+
+
 
 
 
