@@ -22,7 +22,7 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(value = "UPDATE user u SET u.password_fail_cnt = u.passwordFailCnt + 1 WHERE u.uid= :uid",nativeQuery = true)
+    @Query(value = "UPDATE user u SET u.password_fail_cnt = u.password_fail_cnt + 1 WHERE u.uid= :uid",nativeQuery = true)
     void addPasswordFailCnt(String uid);
 
     @Transactional
@@ -33,6 +33,8 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE user u SET u.lock_yn = 'Y' WHERE u.uid= :uid",nativeQuery = true)
-    User modifyLockYnByUid(String uid);
+    void modifyLockYnByUid(String uid);
+
+    boolean existsByUserEmail(String userEmail);
 
 }

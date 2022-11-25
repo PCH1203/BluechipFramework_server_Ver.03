@@ -25,10 +25,12 @@ public class UtilController {
     @PostMapping(value = "/file/upload", consumes = {"multipart/form-data"})
     @Operation(description = "파일 업로드 API 입니다.", summary = "파일 업로드 API")
     public ResponseEntity<?> uploadFile(
-            @RequestParam(required = true) @Parameter(description = "업로드할 파일") MultipartFile file,
-            HttpServletRequest request
+            @RequestParam(required = true) @Parameter(description = "업로드할 파일") MultipartFile file
+//            HttpServletRequest request
     ) throws IOException {
-        return fileService.uploadFile(file, request);
+        return fileService.uploadFile(file
+//                request
+        );
     }
 
     @DeleteMapping(value = "/file/remove")

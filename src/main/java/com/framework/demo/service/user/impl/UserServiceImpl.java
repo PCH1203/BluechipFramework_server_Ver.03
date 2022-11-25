@@ -54,15 +54,15 @@ public class UserServiceImpl implements UserService {
 
 
         } else if(userMapper.findUserByUserEmail(joinDto.getUserEmail()) != null) {
-            return new ResponseEntity(new MessageResponseDto(1, "사용중인 email 입니다."), HttpStatus.OK);
+            return new ResponseEntity(new MessageResponseDto(HttpStatusCode.JOIN_FAIL,0, "사용중인 email 입니다."), HttpStatus.OK);
 
         } else if(userMapper.findUserByPhone(joinDto.getPhone()) != null) {
-            return new ResponseEntity(new MessageResponseDto(HttpStatusCode.BAD_REQUEST,1, "사용중인 전화번호 입니다."), HttpStatus.OK);
+            return new ResponseEntity(new MessageResponseDto(HttpStatusCode.JOIN_FAIL,0, "사용중인 전화번호 입니다."), HttpStatus.OK);
         }
 
         joinDto.setPassword(rawPassword);
 
-        return new ResponseEntity(new MessageResponseDto(joinDto, "회원가입 성공"), HttpStatus.OK);
+        return new ResponseEntity(new MessageResponseDto(HttpStatusCode.MISS_MATCH_OTP.OK,joinDto, "회원가입 성공"), HttpStatus.OK);
     }
 
     public void addSession(HttpServletRequest request, UserVo member) {

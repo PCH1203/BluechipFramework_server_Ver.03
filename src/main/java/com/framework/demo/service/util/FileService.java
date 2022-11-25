@@ -8,7 +8,8 @@ import java.io.IOException;
 
 public interface FileService {
 
-    public ResponseEntity<?> uploadFile(MultipartFile file, HttpServletRequest request) throws IOException;
+//    public ResponseEntity<?> uploadFile(MultipartFile file, HttpServletRequest request) throws IOException;
+    public ResponseEntity<?> uploadFile(MultipartFile file) throws IOException;
     public ResponseEntity<?> removeFile(Long fileId, String filePath, HttpServletRequest request) throws IOException;
 
 

@@ -14,7 +14,7 @@ public class JoinDto {
     @JsonIgnore
     private String uid;
 
-    @Schema(description = "이메일(계정아이디)", example = "chanho1203@naver.com")
+    @Schema(description = "이메일(계정아이디)", example = "test01@naver.com")
     @Email(message = "이메일 형식이 맞지 않습니다.")
 //    @Email(regexp = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$", message = "유효한 전화번호 형식이 아닙니다.")
     private String userEmail;
@@ -26,13 +26,15 @@ public class JoinDto {
     private String name;
 
     @Schema(description = "전화번호", example = "01011112222")
-    @Pattern(regexp = "^\\d{3}-\\d{4}-\\d{4}$", message = "유효한 전화번호 형식이 아닙니다.")
+
+//    @Pattern(regexp = "^\\d{3}-\\d{4}-\\d{4}$", message = "유효한 전화번호 형식이 아닙니다.")
     private String phone;
 
-    @Schema(description = "계정타입 web/app")
+//    @JsonIgnore
+    @Schema(description = "계정타입 web/app", example = "web")
     private String type;
 
-    @JsonIgnore
+    @Schema(description = "권한 설정", example = "4")
     private Integer roleId;
 
 }

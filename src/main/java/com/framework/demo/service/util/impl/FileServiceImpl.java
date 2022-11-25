@@ -36,10 +36,11 @@ public class FileServiceImpl implements FileService {
     private String fileDir;
 
     @Override
-    public ResponseEntity<?> uploadFile(MultipartFile file, HttpServletRequest request) throws IOException {
+//    public ResponseEntity<?> uploadFile(MultipartFile file, HttpServletRequest request) throws IOException {
+    public ResponseEntity<?> uploadFile(MultipartFile file) throws IOException {
 
         // request header의 userPk로 유저 정보 조회
-        User userInfo = jwtTokenProvider.findUserInfoByRequest(request);
+//        User userInfo = jwtTokenProvider.findUserInfoByRequest(request);
 
         // 원래 파일 이름 추출.
         String origName = file.getOriginalFilename();
@@ -56,7 +57,7 @@ public class FileServiceImpl implements FileService {
 
         //파일 빌더 생성
         File bcfFile = File.builder()
-                .uploader(userInfo.getUid())
+//                .uploader(userInfo.getUid())
                 .originName(origName)
                 .savedName(savedName)
                 .savedPath(savePath)

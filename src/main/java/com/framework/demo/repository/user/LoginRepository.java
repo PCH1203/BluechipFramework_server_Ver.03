@@ -18,7 +18,7 @@ public interface LoginRepository extends JpaRepository<Login, String> {
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE login l SET l.is_login = :isLogin, l.update_dt= :updateDt WHERE l.uid = :uid", nativeQuery = true)
-    void modifyIsLogin(String isLogin,String updateDt, String uid);
+    void modifyIsLogin(String isLogin, String updateDt, String uid);
 
 
 

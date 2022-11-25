@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -56,9 +57,9 @@ public class AccountManagementService {
      * @param userId
      * @return
      */
-    public ResponseEntity<?> forceLogout(String userId) {
+    public ResponseEntity<?> forceLogout(HttpSession session, String userId) {
 
-        // BcfUser 에서 유저 정보 조회
+        // User 에서 유저 정보 조회
         User user = userRepository.findByUserEmail(userId);
 
         if(user != null) {
@@ -73,6 +74,10 @@ public class AccountManagementService {
                 loginRepository.modifyIsLogin("N", logoutDt, user.getUid());
                 // bcfAuthorities.refreshToken 삭제
                 authRepository.updateRefreshToken(user.getUid(),"", logoutDt);
+                // session 특정 Attribute 삭제
+                session.removeAttribute("uid");
+                session.removeAttribute("phone");
+//                session.invalidate(); //세션의 모든 속성을 삭제
 
                 return new ResponseEntity(new MessageResponseDto(user.getUserEmail(), "로그아웃 완료"), HttpStatus.OK);
 

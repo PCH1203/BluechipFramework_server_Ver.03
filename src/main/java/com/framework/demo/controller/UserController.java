@@ -4,7 +4,9 @@ import com.framework.demo.domain.User;
 import com.framework.demo.model.user.dto.JoinDto;
 import com.framework.demo.model.user.dto.ModifyMyAccountDto;
 import com.framework.demo.service.user.UserService;
+import com.framework.demo.service.user.UserService2;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,10 +29,20 @@ public class UserController {
 
     private final UserService userService;
 
+    private final UserService2 userService2;
+
     @PostMapping("/join")
     @Operation(description = "회원가입을 진행 합니다.", summary = "회원가입 API")
     public ResponseEntity<?> join(@RequestBody @Valid JoinDto joinDto) {
         return userService.join(joinDto);
+    }
+
+    @GetMapping("/join/id-check")
+    @Operation(description = "회원가입시 아이디 중복 검사를 실행합니다.", summary = "아이디 중복검사 API")
+    public ResponseEntity<?> emailCheck(@RequestParam(required = true) @Parameter(description = "아이디")String userEmail ) {
+        System.out.println(">>>>> 아이디 중복검사 API");
+        return userService2.emailCheck(userEmail);
+
     }
 
     @GetMapping("/my-account")

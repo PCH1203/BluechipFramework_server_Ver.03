@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+
 @Slf4j
 @RestController
 @RequestMapping("/framework/api/admin/account")
@@ -36,8 +38,11 @@ public class AdminAccountController {
      */
     @PostMapping("/force-logout")
     @Operation(description = "관리자 권한이 필요한 강제 로그아웃 API입니다.", summary = "강제 로그아웃 API")
-    public ResponseEntity<?> forceLogout (@RequestParam(required = true) @Parameter(description = "userId")String userId) {
-        return accountManagementService.forceLogout(userId);
+    public ResponseEntity<?> forceLogout (
+            HttpSession session,
+            @RequestParam(required = true) @Parameter(description = "userId")String userId
+    ) {
+        return accountManagementService.forceLogout(session, userId);
     }
 
 

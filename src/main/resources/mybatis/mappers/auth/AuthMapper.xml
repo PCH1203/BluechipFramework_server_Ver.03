@@ -38,6 +38,22 @@
         )
     </insert>
 
+    <insert id="addOtp" parameterType="com.framework.demo.model.auth.vo.OtpVo">
+        INSERT INTO OTP (
+        OTP_PASSWORD,
+        CREATOR,
+        SEND_TO,
+        CREATE_DT,
+        EXPIRE_DT
+        ) VALUES (
+        #{otpPassword},
+        #{creator},
+        #{sendTo},
+        DATE_FORMAT(NOW(), "%Y%m%d%H%i%s"),
+        DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 3 MINUTE),'%Y%m%d%H%i%S')
+        )
+    </insert>
+
 
 
 </mapper>
