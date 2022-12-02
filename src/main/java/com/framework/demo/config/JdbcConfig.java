@@ -29,20 +29,16 @@ import java.util.Properties;
 @MapperScan(value = "com.framework.demo.mapper.**")
 public class JdbcConfig {
 
-    @Value("${db.driverClassName}")
+    @Value("${spring.datasource.driver-class-name}")
     private String driver;
 
-    @Value("${db.url}")
+    @Value("${spring.datasource.url}")
     private String url;
 
-    @Value("${db.username}")
+    @Value("${spring.datasource.username}")
     private String userId;
-
-    @Value("${db.password}")
+    @Value("${spring.datasource.password}")
     private String passwd;
-
-
-//    private final Environment env;
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
@@ -84,8 +80,8 @@ public class JdbcConfig {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
-        properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("hibernate.format_sql", "true");
+//        properties.setProperty("hibernate.show_sql", "true");
+//        properties.setProperty("hibernate.format_sql", "true");
         return properties;
     }
 

@@ -1,8 +1,11 @@
 package com.framework.demo.service.admin;
 
 import com.framework.demo.domain.User;
+import com.framework.demo.enums.prameter.admin.AdminEnums;
+import com.framework.demo.mapper.user.UserMapper;
 import com.framework.demo.model.MessageResponseDto;
 import com.framework.demo.model.admin.dto.ModifyAccountDto;
+import com.framework.demo.model.admin.vo.ManagementUserVo;
 import com.framework.demo.repository.auth.AuthRepository;
 import com.framework.demo.repository.user.LoginRepository;
 import com.framework.demo.repository.user.UserRepository;
@@ -15,15 +18,22 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountManagementService {
 
+    // JPA Repository
     private final UserRepository userRepository;
     private final LoginRepository loginRepository;
     private final AuthRepository authRepository;
+
+    // MYBATIS mapper
+    private final UserMapper userMapper;
+
+    private AdminEnums adminEnums;
 
 
 
@@ -87,6 +97,45 @@ public class AccountManagementService {
         } else {
             return new ResponseEntity(new MessageResponseDto(userId, "사용자를 찾을 수 없습니다."), HttpStatus.OK);
         }
+    }
+
+    /**
+     * 사용자 목록 조회 API
+     * @return
+     */
+    public ResponseEntity<?> loadUserList(AdminEnums.SearchOption searchOption, String searchValue) {
+
+        System.out.println(">>>>> 사용자 목록조회 API service");
+        log.info("SearchOption: " + searchOption );
+        log.info("Value: " + searchValue );
+
+        String option = null;
+
+        if(searchOption != null) {
+
+        option = searchOption.getStr();
+
+        }
+
+        List<ManagementUserVo> users = userMapper.findManagementUsers(option, searchValue);
+
+        if(users == null || users.isEmpty()) {
+            return new ResponseEntity(new MessageResponseDto(users, "사용자를 찾을 수 없습니다."), HttpStatus.OK);
+        }
+
+        return new ResponseEntity(new MessageResponseDto(users, "사용자 목륵을 조회합니다."), HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> modifyUserLockYn(String uid, String lockYn) {
+        System.out.println(">>>>> 사용자 계정 정지 상태 변경 API Service");
+
+        User user = userRepository.findByUid(uid);
+
+        if(user.getLockYn().equals("N")) {
+            userRepository.modifyLockYnByUid2(uid, lockYn);
+        }
+
+        return new ResponseEntity(new MessageResponseDto(0,"유저 계정을 정지 시켰습니다."), HttpStatus.OK);
     }
 
 

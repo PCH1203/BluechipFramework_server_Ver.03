@@ -32,4 +32,10 @@ public class AdminCommonController {
         return commonService.saveAgreements(agreementsList);
     }
 
+//    @GetMapping("/agreements/save")
+//    @Operation(description = "테이블의 columns 목록을 조회 합니다.", summary = "")
+//    public ResponseEntity<?> loadc(@RequestBody @Valid List<Agreements> agreementsList) {
+//        return commonService.saveAgreements(agreementsList);
+//    }
+
 }

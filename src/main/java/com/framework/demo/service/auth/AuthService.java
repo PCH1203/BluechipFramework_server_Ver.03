@@ -86,7 +86,7 @@ public class AuthService {
             } else {
         
                 // 계정 잠김 상태 확인
-                if(userRepository.findByUid(member.getUid()).getLockYns().equals("Y")) {
+                if(userRepository.findByUid(member.getUid()).getLockYn().equals("Y")) {
                     return new ResponseEntity(new MessageResponseDto(HttpStatusCode.USER_LOCK, null, "비밀번호 실패 횟수를 초과하여 로그인 할 수 없습니다."), HttpStatus.OK);
                 }
 
@@ -335,7 +335,7 @@ public class AuthService {
             return authBaseService.passwordFailManagement(member.getUid());
         }
         // 계정 잠김 상태 확인
-        if(userRepository.findByUid(member.getUid()).getLockYns().equals("Y")) {
+        if(userRepository.findByUid(member.getUid()).getLockYn().equals("Y")) {
             return new ResponseEntity(new MessageResponseDto(1, "비밀번호 실패 횟수를 초과하여 로그인 할 수 없습니다."), HttpStatus.OK);
         }
         // 로그인 상태 확인

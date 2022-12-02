@@ -35,6 +35,11 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query(value = "UPDATE user u SET u.lock_yn = 'Y' WHERE u.uid= :uid",nativeQuery = true)
     void modifyLockYnByUid(String uid);
 
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "UPDATE user u SET u.lock_yn= :lockYn WHERE u.uid= :uid",nativeQuery = true)
+    void modifyLockYnByUid2(String uid, String lockYn);
+
     boolean existsByUserEmail(String userEmail);
 
 }

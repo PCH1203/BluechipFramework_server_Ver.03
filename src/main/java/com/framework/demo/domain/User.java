@@ -67,7 +67,7 @@ public class User {
     @javax.persistence.Column(name = "lock_yn", columnDefinition = "varchar(15) default 'N'")
     @Schema(description = "lock_yn", example = "N")
     @Column("lock_yn")
-    private String lockYns;
+    private String lockYn;
 
     @javax.persistence.Column(name = "create_dt", length = 40, nullable = false)
     @Column("create_dt")

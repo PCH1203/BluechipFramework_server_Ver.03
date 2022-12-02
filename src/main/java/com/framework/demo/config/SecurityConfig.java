@@ -35,6 +35,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * WebSecurity가 HttpSecurity 보다 우선 순위를 갖는다.
+     * @param web
+     * @throws Exception
+     */
     @Override
     public void configure(WebSecurity web) throws Exception {
 //        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/lib/**", "/html","/framework/**");
@@ -50,6 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable()
                 .authorizeRequests()// 요청에 대한 사용 권한 체크
 //                .antMatchers("/framework/api/user/**").authenticated()
+                .antMatchers("http://localhost:3000/management/**").authenticated()
                 .antMatchers("/framework/**").permitAll()
 //                .antMatchers("/**").permitAll()
                         .and()

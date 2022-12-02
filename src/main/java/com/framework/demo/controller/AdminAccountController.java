@@ -1,6 +1,8 @@
 package com.framework.demo.controller;
 
+import com.framework.demo.enums.prameter.admin.AdminEnums;
 import com.framework.demo.model.admin.dto.ModifyAccountDto;
+import com.framework.demo.model.admin.vo.ManagementUserVo;
 import com.framework.demo.service.admin.AccountManagementService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,6 +21,8 @@ import javax.servlet.http.HttpSession;
 @Tag(name = "[ADMIN] Account Management", description = "[관리자] 사용자 계정 관리")
 public class AdminAccountController {
     private final AccountManagementService accountManagementService;
+
+    private AdminEnums AdminEnums;
 
     /**
      * 회원정보 수정 API
@@ -45,7 +49,33 @@ public class AdminAccountController {
         return accountManagementService.forceLogout(session, userId);
     }
 
+    /**
+     * 사용자 목록 조회 API
+     * @param session
+     * @param userId
+     * @return
+     */
+    @GetMapping("/user-list")
+    @Operation(description = "사용자 목록을 조회 합니다.", summary = "사용자 목록 조회 API")
+    public ResponseEntity<?> loadUserList (
+            @RequestParam(required = false) @Parameter(description = "검색 옵션") AdminEnums.SearchOption searchOption,
+            @RequestParam(required = false) @Parameter(description = "검색 값") String searchValue
+    ) {
+        System.out.println(">>>>> 사용자 목록조회 API Controller");
+        log.info("SearchOption: " + searchOption );
+        log.info("Value: " + searchValue );
+        return accountManagementService.loadUserList(searchOption, searchValue);
+    }
 
-
+    @PostMapping("/modify/user/status")
+    @Operation(description = "사용자 계정 정지 상태를 변경 합니다.", summary = "사용자 계정 정지 상태 변경 API")
+    public ResponseEntity<?> modifyUserLockYn(
+            @RequestParam(required = true) @Parameter(description = "uid") String uid,
+            @RequestParam(required = true) @Parameter(description = "상태값") String lockYn
+    ) {
+        System.out.println(">>>>> 사용자 계정 정지 상태 변경 API Controller");
+        log.info("uid: " + uid );
+        return accountManagementService.modifyUserLockYn(uid, lockYn);
+    }
 
 }
