@@ -26,9 +26,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @Tag(name = "[USER] Account", description = "사용자 기능")
 public class UserController {
-
     private final UserService userService;
-
     private final UserService2 userService2;
 
     @PostMapping("/join")
@@ -42,9 +40,8 @@ public class UserController {
     public ResponseEntity<?> emailCheck(@RequestParam(required = true) @Parameter(description = "아이디")String userEmail ) {
         System.out.println(">>>>> 아이디 중복검사 API");
         return userService2.emailCheck(userEmail);
-
     }
-
+    
     @GetMapping("/my-account")
     @Operation(description = "나의 프로필 조회.", summary = "MY PROFILE 조회 API")
     @ApiResponse(responseCode = "200", description = "나의 계정 정보를 조회 합니다.", content = @Content(schema = @Schema(implementation = User.class)))
@@ -57,16 +54,5 @@ public class UserController {
     public ResponseEntity<?> modifyMyAccount (HttpServletRequest request, @RequestBody ModifyMyAccountDto modifyMyAccountDto) {
         return userService.modifyMyAccount(request, modifyMyAccountDto);
     }
-
-/*    // 시큐리티 필터 테스트 API
-    @PostMapping("/test")
-    @Operation(description = "로그인을 통해 발급 받은 Access token을 통해 접근 가능하다.", summary = "Access 토큰 테스트 API")
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = JoinDto.class)))
-    public String mapTestApi (
-            @RequestBody UserVo userVo)
-    {
-        return "<h1>test 통과</h1>";
-    }*/
-
 
 }
