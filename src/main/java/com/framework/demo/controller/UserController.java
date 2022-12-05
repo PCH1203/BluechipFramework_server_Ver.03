@@ -41,7 +41,7 @@ public class UserController {
         System.out.println(">>>>> 아이디 중복검사 API");
         return userService2.emailCheck(userEmail);
     }
-    
+
     @GetMapping("/my-account")
     @Operation(description = "나의 프로필 조회.", summary = "MY PROFILE 조회 API")
     @ApiResponse(responseCode = "200", description = "나의 계정 정보를 조회 합니다.", content = @Content(schema = @Schema(implementation = User.class)))
