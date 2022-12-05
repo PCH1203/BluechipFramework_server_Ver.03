@@ -2,6 +2,7 @@ package com.framework.demo.service.user.impl;
 
 import com.framework.demo.domain.User;
 import com.framework.demo.enums.HttpStatusCode;
+import com.framework.demo.enums.prameter.auth.ServiceEnums;
 import com.framework.demo.jwt.JwtTokenProvider;
 import com.framework.demo.mapper.auth.AuthMapper;
 import com.framework.demo.mapper.user.UserMapper;
@@ -39,26 +40,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<?> join(JoinDto joinDto) {
 
+        System.out.println("회원가입 API SERVICE");
+        System.out.println("userEmail: " + joinDto.getUserEmail());
+        System.out.println("서비스ID: " + joinDto.getServiceId());
+
+
         String rawPassword = joinDto.getPassword();
-        String uid = null;
 
-        // email 중복 검사
-        if(userMapper.findUserByUserEmail(joinDto.getUserEmail()) == null && userMapper.findUserByPhone(joinDto.getPhone()) == null) {
-
-            uid = RandomStringUtils.randomAlphanumeric(20);
-            String password = bCryptPasswordEncoder.encode(joinDto.getPassword());
-            joinDto.setPassword(password);
-            joinDto.setUid(uid);
-
-            userMapper.join(joinDto);
-
-
-        } else if(userMapper.findUserByUserEmail(joinDto.getUserEmail()) != null) {
+        if(userMapper.findUserByUserEmailAndServiceId(joinDto) != null) {
             return new ResponseEntity(new MessageResponseDto(HttpStatusCode.JOIN_FAIL,0, "사용중인 email 입니다."), HttpStatus.OK);
-
-        } else if(userMapper.findUserByPhone(joinDto.getPhone()) != null) {
+        }
+        if(userMapper.findUserByPhone(joinDto.getPhone()) != null) {
             return new ResponseEntity(new MessageResponseDto(HttpStatusCode.JOIN_FAIL,0, "사용중인 전화번호 입니다."), HttpStatus.OK);
         }
+
+        String uid = RandomStringUtils.randomAlphanumeric(20);
+        String password = bCryptPasswordEncoder.encode(joinDto.getPassword());
+        joinDto.setPassword(password);
+        joinDto.setUid(uid);
+
+        userMapper.join(joinDto);
 
         joinDto.setPassword(rawPassword);
 

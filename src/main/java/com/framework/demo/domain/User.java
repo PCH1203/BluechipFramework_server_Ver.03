@@ -48,6 +48,11 @@ public class User {
     @Column("phone")
     private String phone;
 
+    @javax.persistence.Column(name = "service_id", length = 20, nullable = false)
+    @Schema(description = "가입 서비스")
+    @Column("service_id")
+    private String serviceId;
+
     @javax.persistence.Column(name = "type", length = 20, nullable = false)
     @Schema(description = "회원 타입 (web, app)", example = "web")
     @Column("type")

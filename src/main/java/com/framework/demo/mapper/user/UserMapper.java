@@ -17,6 +17,7 @@ public interface UserMapper {
         UserVo findUserByPhone(String phone);
         UserVo findUserByUsername(String username);
         UserVo findUserByUserEmail(String userEmail);
+        UserVo findUserByUserEmailAndServiceId(JoinDto joinDto);
         void join(JoinDto joinDto);
         void addSession(AddSessionDto addSessionDto);
         void modifyIsLogin(String uid, String loginStatus);

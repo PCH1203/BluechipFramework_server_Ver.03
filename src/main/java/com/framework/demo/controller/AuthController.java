@@ -28,12 +28,14 @@ public class AuthController {
     public ResponseEntity<?> appLoginStep1 (
             HttpServletRequest request,
             HttpSession session,
+            @RequestParam(required = true) @Parameter(description = "서비스 아이디")String serviceId,
             @RequestParam(required = true) @Parameter(description = "아이디")String userEmail,
             @RequestParam(required = true) @Parameter(description = "비밀번호")String password
     ) {
         System.out.println(">>>>> ID/PW 로그인 API");
-        return authService.appLoginStep1(request,session, userEmail, password);
+        return authService.appLoginStep1(request,session, serviceId, userEmail, password);
     }
+
     @PostMapping("/login/send-otp")
     @Operation(description = "otp 전송.", summary = "로그인 STEP_2")
     public ResponseEntity<?> appLoginStep2 (
@@ -42,6 +44,7 @@ public class AuthController {
             @RequestParam(required = true) @Parameter(description = "수신자 번호") String sendTo
     ) {
         return authService.loginSendOtp(request, session, sendTo);
+
     }
 
     @PostMapping("/login/check-otp")

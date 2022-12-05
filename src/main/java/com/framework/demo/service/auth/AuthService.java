@@ -54,12 +54,14 @@ public class AuthService {
      * @param password
      * @return
      */
-    public ResponseEntity<?> appLoginStep1(HttpServletRequest request, HttpSession session, String userEmail, String password)  {
+    public ResponseEntity<?> appLoginStep1(HttpServletRequest request, HttpSession session, String serviceId, String userEmail, String password)  {
 
         System.out.println(">>>>> ID/PW 로그인 API (service)");
 
         // 1. 회원 가입 여부 확인
-        User member = userRepository.findByUserEmail(userEmail);
+//        User member = userRepository.findByUserEmail(userEmail);
+
+        User member = userRepository.findByServiceIdAndUserEmail(serviceId, userEmail );
 
         if (member != null) {
 
@@ -106,6 +108,7 @@ public class AuthService {
                     
                     //세션에 uid,phone 저장
                     session.setAttribute("uid", member.getUid());
+                    session.setAttribute("serviceId", member.getServiceId());
 //                    session.setAttribute("phone", member.getPhone());
 
                     return new ResponseEntity(new MessageResponseDto(member,"ID/PW 로그인 성공"), HttpStatus.OK);
@@ -213,7 +216,7 @@ public class AuthService {
         loginInfo.setName(member.getName());
         loginInfo.setPhone(member.getPhone());
 
-        Authorities authorities = Authorities.builder()
+        Authorities authorities = Authorities. builder()
                 .uid(member.getUid())
                 .refreshToken(loginInfo.getRefreshToken())
                 .createDt(nowDateTime)

@@ -61,9 +61,6 @@ public class AdminAccountController {
             @RequestParam(required = false) @Parameter(description = "검색 옵션") AdminEnums.SearchOption searchOption,
             @RequestParam(required = false) @Parameter(description = "검색 값") String searchValue
     ) {
-        System.out.println(">>>>> 사용자 목록조회 API Controller");
-        log.info("SearchOption: " + searchOption );
-        log.info("Value: " + searchValue );
         return accountManagementService.loadUserList(searchOption, searchValue);
     }
 

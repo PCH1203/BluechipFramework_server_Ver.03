@@ -3,6 +3,14 @@
 
 <mapper namespace="com.framework.demo.mapper.user.UserMapper">
 
+
+    <select id="findUserByUserEmailAndServiceId" resultType="com.framework.demo.model.user.vo.UserVo">
+        SELECT *
+        FROM  USER
+        WHERE USER_EMAIL = #{userEmail} AND SERVICE_ID = #{serviceId}
+    </select>
+
+
     <select id="findUserByUid" resultType="com.framework.demo.model.user.vo.UserVo">
         SELECT *
         FROM USER
@@ -35,6 +43,7 @@
         PASSWORD,
         NAME,
         PHONE,
+        SERVICE_ID,
         ROLE_ID,
         TYPE,
         CREATE_DT
@@ -46,6 +55,7 @@
         #{password},
         #{name},
         #{phone},
+        #{serviceId},
         #{roleId},
         #{type},
         DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')

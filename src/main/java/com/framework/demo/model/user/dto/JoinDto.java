@@ -30,7 +30,9 @@ public class JoinDto {
 //    @Pattern(regexp = "^\\d{3}-\\d{4}-\\d{4}$", message = "유효한 전화번호 형식이 아닙니다.")
     private String phone;
 
-//    @JsonIgnore
+    @Schema(description = "서비스 선택")
+    private String serviceId;
+
     @Schema(description = "계정타입 web/app", example = "web")
     private String type;
 
