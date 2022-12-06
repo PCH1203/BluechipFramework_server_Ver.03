@@ -9,15 +9,15 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
 
 @Builder
 @Data
-@Entity(name = "service")
-@Table(name = "service")
+@Entity(name = "service_category")
+@Table(name = "service_category")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Service {
+public class ServiceCategory {
 
     @javax.persistence.Id
     @javax.persistence.Column(name ="service_id", nullable = false)
@@ -30,10 +30,6 @@ public class Service {
     @Column("service_name")
     @Schema(description = "서비스 명")
     private String serviceName;
-
-    @javax.persistence.Column(name = "version")
-    @Column("version")
-    private String version;
 
     @javax.persistence.Column(name = "is_open")
     @Column("is_open")

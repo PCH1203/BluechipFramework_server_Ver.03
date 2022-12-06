@@ -52,19 +52,34 @@ public class JwtTokenProvider {
     }
 
     // JWT 토큰 생성 함수
-    public String createToken (String userPk, int roleId) {
-//    public String createToken (String userPk, String role) {
+//    public String createToken (String userPk, int roleId) {
+//        System.out.println(">>>>> Access Token 생성");
+//        Claims claims = Jwts.claims().setSubject(userPk); //JWT payload에 저장되는 정보단위, 보통 여기서 user 식별 값을 넣는다.
+//        claims.put("roles", roleId); // 정보는 key / value 쌍으로 저장된다.
+//        Date now = new Date();
+//        return Jwts.builder()
+//                .setClaims(claims) // 정보 저장
+//                .setIssuedAt(now) // 토큰 발행 시간
+//                .setExpiration(new Date(now.getTime() + tokenValidTime)) // set Expire Time
+//                .signWith(SignatureAlgorithm.HS256, secretKey) // 사용할 암호화 알고리즘과 signature 에 들어갈 secret 세팅
+//                .compact();
+//    }
+
+    public String createToken (String userPk, String serviceId) {
         System.out.println(">>>>> Access Token 생성");
+        System.out.println(">>>>> serviceId: " + serviceId);
         Claims claims = Jwts.claims().setSubject(userPk); //JWT payload에 저장되는 정보단위, 보통 여기서 user 식별 값을 넣는다.
-        claims.put("roles", roleId); // 정보는 key / value 쌍으로 저장된다.
+        claims.put("serviceId", serviceId); // 정보는 key / value 쌍으로 저장된다.
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims) // 정보 저장
                 .setIssuedAt(now) // 토큰 발행 시간
                 .setExpiration(new Date(now.getTime() + tokenValidTime)) // set Expire Time
-                .signWith(SignatureAlgorithm.HS256, secretKey) // 사용할 암호화 알고리즘과 signature 에 들어갈 secret값 세팅
+                .signWith(SignatureAlgorithm.HS256, secretKey) // 사용할 암호화 알고리즘과 signature 에 들어갈 secret 세팅
                 .compact();
     }
+
+
 
     //JWT 리프레시 토큰 생성
     public String createRefreshToken (String userPk, int roleId) {

@@ -14,7 +14,6 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     User findByUserEmail(String userEmail);
     User findByUid(String uid);
-
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE user SET name = :name WHERE uid= :uid", nativeQuery = true)
@@ -42,8 +41,8 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     boolean existsByUserEmail(String userEmail);
 
-    boolean existsByServiceIdAndUserEmail(String serviceId, String userEmail);
+//    boolean existsByServiceIdAndUserEmail(String serviceId, String userEmail);
 
-    User findByServiceIdAndUserEmail(String serviceId, String UserEmail);
+//    User findByServiceIdAndUserEmail(String serviceId, String UserEmail);
 
 }
