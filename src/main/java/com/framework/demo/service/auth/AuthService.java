@@ -9,8 +9,7 @@ import com.framework.demo.model.MessageResponseDto;
 import com.framework.demo.model.auth.vo.OtpVo;
 import com.framework.demo.model.user.vo.LoginVo;
 import com.framework.demo.model.user.vo.UserVo;
-import com.framework.demo.repository.admin.ServiceCategoryRepository;
-import com.framework.demo.repository.admin.UserServiceRepository;
+import com.framework.demo.repository.user.UserServiceRepository;
 import com.framework.demo.repository.auth.AuthRepository;
 import com.framework.demo.repository.session.SessionRepository;
 import com.framework.demo.repository.user.LoginRepository;
@@ -77,7 +76,7 @@ public class AuthService {
         boolean isExist = userServiceRepository.existsByUidAndServiceId(member.getUid(), serviceId);
 
         if(member == null || !isExist) {
-            return new ResponseEntity(new MessageResponseDto(userEmail,"사용자를 찾을 수 없습니다."),HttpStatus.OK);
+            return new ResponseEntity(new MessageResponseDto(HttpStatusCode.ID_FAIL,userEmail,"사용자를 찾을 수 없습니다."),HttpStatus.OK);
         }
 
             // 비밀번호 입력 실패
@@ -117,6 +116,7 @@ public class AuthService {
                     //세션에 uid,phone 저장
                     session.setAttribute("uid", member.getUid());
                     session.setAttribute("serviceId", serviceId);
+                    session.setAttribute("type", "login");
 //                    session.setAttribute("phone", member.getPhone());
 
                     return new ResponseEntity(new MessageResponseDto(member,"ID/PW 로그인 성공"), HttpStatus.OK);
@@ -144,8 +144,9 @@ public class AuthService {
         System.out.println(">>>> session.phone: " + session.getAttribute("phone"));
 
 
-        //login_step_1 으로 부터 넘겨받은 uid
+        //login_step_1 으로 부터 넘겨받은 uid 와 OTP 전송 타입
         String uid = (String) session.getAttribute("uid");
+        String type = (String) session.getAttribute("type");
 
         if(uid == null) {
             return new ResponseEntity(new MessageResponseDto(HttpStatusCode.REQUIRED_LOGIN_STEP_1,null, "로그인 정보가 존재하지 않습니다."),HttpStatus.OK);
@@ -163,6 +164,7 @@ public class AuthService {
         otpVo.setOtpPassword(otpPassword);
         otpVo.setCreator(uid);
         otpVo.setSendTo(sendTo);
+        otpVo.setType(type);
         authMapper.addOtp(otpVo);
 
         String enOtpPassword = bCryptPasswordEncoder.encode(otpPassword);
@@ -186,11 +188,16 @@ public class AuthService {
     public ResponseEntity<?> loginCheckOtp(HttpServletRequest request, HttpSession session, String otpPassword) {
 
         System.out.println(">>>>> OTP 인증 API (service)");
-
-        String serviceId = (String) session.getAttribute("serviceId");
-
+        
+        // 현재 날짜 생성
         String nowDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 
+        // 세션으로 부터 serviceId와 OTP 타입 저장 
+        String serviceId = (String) session.getAttribute("serviceId");
+        String type = (String) session.getAttribute("type");
+        System.out.println(">>>>>>>> type: " + type);
+
+        // 세션으로 부터 OTP PW와 UID 저장
         String originOtp = (String) session.getAttribute("enOtpPassword");
         String uid = (String) session.getAttribute("uid");
 
@@ -210,7 +217,11 @@ public class AuthService {
 
         // 유저 정보 조회
         User member = userRepository.findByUid(uid);
-//        List<UserService> serviceList = userServiceRepository.findByUid(uid);
+
+        if(type == "signUp") {
+            System.out.println(">>>>> type: " + type);
+            return new ResponseEntity(new MessageResponseDto(member.getUserEmail(),"계정 연동을 위한 로그인 인증 성공"), HttpStatus.OK);
+        }
 
         LoginVo loginInfo = new LoginVo();
 

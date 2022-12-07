@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class OtpVo {
     private Long otpId;
+    private String type;
     private String otpPassword;
     private String creator;
     private String sendTo;

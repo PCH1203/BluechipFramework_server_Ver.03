@@ -40,12 +40,14 @@
 
     <insert id="addOtp" parameterType="com.framework.demo.model.auth.vo.OtpVo">
         INSERT INTO OTP (
+        TYPE,
         OTP_PASSWORD,
         CREATOR,
         SEND_TO,
         CREATE_DT,
         EXPIRE_DT
         ) VALUES (
+        #{type},
         #{otpPassword},
         #{creator},
         #{sendTo},

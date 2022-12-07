@@ -1,4 +1,4 @@
-package com.framework.demo.repository.admin;
+package com.framework.demo.repository.user;
 
 import com.framework.demo.domain.ServiceCategory;
 import com.framework.demo.domain.UserService;

@@ -41,6 +41,7 @@ public class AuthController {
     public ResponseEntity<?> appLoginStep2 (
             HttpServletRequest request,
             HttpSession session,
+            @RequestParam(required = false) @Parameter(description = "OTP 전송 목적", example = "login, signUp") String type,
             @RequestParam(required = true) @Parameter(description = "수신자 번호") String sendTo
     ) {
         return authService.loginSendOtp(request, session, sendTo);

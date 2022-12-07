@@ -139,6 +139,19 @@
         </where>
     </select>
 
+    <select id="getSignedServiceList" resultType="com.framework.demo.model.user.vo.SignedUpServiceListVo">
+
+        /* getSignedServiceList */
+
+        SELECT SC.SERVICE_ID, SC.SERVICE_NAME,
+        (CASE
+            WHEN US.UID = #{UID} THEN 'Y' ELSE 'N'
+         END
+        ) AS STATUS
+        FROM SERVICE_CATEGORY SC
+        LEFT JOIN USER_SERVICE US ON US.SERVICE_ID = SC.SERVICE_ID
+    </select>
+
 
 
 

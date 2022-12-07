@@ -19,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Slf4j
@@ -33,7 +34,6 @@ public class UserController {
     /**
      * 화원가입 API
      * @param joinDto
-     * @param serviceId
      * @return
      */
     @PostMapping("/join")
@@ -46,11 +46,27 @@ public class UserController {
     @GetMapping("/join/id-check")
     @Operation(description = "회원가입시 아이디 중복 검사를 실행합니다.", summary = "아이디 중복검사 API")
     public ResponseEntity<?> emailCheck(
-//            @RequestParam(required = true) @Parameter(description = "서비스 아이디") ServiceEnums.ServiceId serviceId,
             @RequestParam(required = true) @Parameter(description = "서비스 아이디") String serviceId,
             @RequestParam(required = true) @Parameter(description = "아이디")String userEmail ) {
         System.out.println(">>>>> 아이디 중복검사 API");
         return userService2.emailCheck(userEmail, serviceId);
+    }
+
+    /**
+     * 계정 연동을 위한 로그인 인증 API
+     * @param userEmail
+     * @param password
+     * @return
+     */
+    @PostMapping("/join/interlock/login")
+    @Operation(description = "계정 연동을 위한 로그인", summary = "계정 연동을 위한 로그인 API")
+    public ResponseEntity<?> interlockLogin(
+            HttpSession session,
+            @RequestParam(required = true) @Parameter(description = "아이디")String userEmail,
+            @RequestParam(required = true) @Parameter(description = "비밀번호")String password
+    ) {
+        System.out.println(">>>>> 계정 연동 로그인 API (controller)");
+        return userService2.interlockLogin(session, userEmail, password);
     }
 
     @GetMapping("/my-account")
@@ -60,10 +76,16 @@ public class UserController {
         return userService.findMyAccount(request);
     }
 
-    @PutMapping("/modify-account")
-    @Operation(description = "회원 정보 수정", summary = "회원 정보 수정 API")
-    public ResponseEntity<?> modifyMyAccount (HttpServletRequest request, @RequestBody ModifyMyAccountDto modifyMyAccountDto) {
-        return userService.modifyMyAccount(request, modifyMyAccountDto);
+    @GetMapping("/my/service-list")
+    @Operation(description = "나의 서비스 목록 조회.", summary = "나의 서비스 목록 조회 API")
+    public ResponseEntity<?> signedUpServiceList (
+//            @RequestParam(required = false) @Parameter(description = "uid")String uid
+            HttpSession session
+    ) {
+        System.out.println(">>>>> myServiceList API (controller)");
+        System.out.println(">>>>> uid: " + (String) session.getAttribute("uid"));
+        return userService2.signedUpServiceList(session);
     }
+
 
 }

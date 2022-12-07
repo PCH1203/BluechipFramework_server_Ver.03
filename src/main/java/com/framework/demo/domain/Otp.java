@@ -29,6 +29,10 @@ public class Otp {
     @Column("id")
     private Long id;
 
+    @javax.persistence.Column(name = "type")
+    @Column("type")
+    private String type;
+
     @javax.persistence.Column(name = "otp_password", nullable = false, length = 100)
     @Column("otp_password")
     private String otpPassword;

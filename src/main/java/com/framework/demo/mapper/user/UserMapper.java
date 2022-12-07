@@ -4,6 +4,7 @@ import com.framework.demo.model.admin.vo.ManagementUserVo;
 import com.framework.demo.model.user.dto.AddSessionDto;
 import com.framework.demo.model.user.dto.JoinDto;
 import com.framework.demo.model.user.dto.ModifyMyAccountDto;
+import com.framework.demo.model.user.vo.SignedUpServiceListVo;
 import com.framework.demo.model.user.vo.UserVo;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -24,5 +25,7 @@ public interface UserMapper {
         int modifyMyAccount(ModifyMyAccountDto modifyMyAccountDto);
 
         List<ManagementUserVo> findManagementUsers(String option, String searchValue);
+
+        List<SignedUpServiceListVo> getSignedServiceList(String uid);
 
 }
