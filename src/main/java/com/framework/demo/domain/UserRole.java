@@ -11,14 +11,16 @@ import org.springframework.data.relational.core.mapping.Table;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Builder
 @Data
-@Entity(name = "role_category")
-@Table(name = "role_category")
+@Entity(name = "user_role")
+@Table(name = "user_role")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Roles {
+public class UserRole {
 
     @javax.persistence.Id
     @javax.persistence.Column(name ="id", nullable = false)
@@ -31,8 +33,12 @@ public class Roles {
     @Column("role")
     private String role;
 
-    @javax.persistence.Column(name = "sub_role", nullable = false)
-    @Column("sub_role")
-    private String subRole;
+    @javax.persistence.Column(name = "create_dt")
+    @Column("create_dt")
+    private String createDt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+
+    @javax.persistence.Column(name = "update_dt")
+    @Column("update_dt")
+    private String updateDt;
 
 }

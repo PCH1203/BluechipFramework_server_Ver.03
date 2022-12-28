@@ -1,5 +1,6 @@
 package com.framework.demo.domain;
 
+import com.framework.demo.domain.common.RuntimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +17,7 @@ import javax.persistence.Entity;
 @Table(name = "authorities")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Authorities {
+public class Authorities extends RuntimeEntity {
 
     @javax.persistence.Id
     @javax.persistence.Column(name ="uid", length = 20, nullable = false)
@@ -28,13 +29,13 @@ public class Authorities {
     @Column("refresh_token")
     private String refreshToken;
 
-    @javax.persistence.Column(name = "create_dt", length = 40, nullable = false)
-    @Column("create_dt")
-    private String createDt;
-
-    @javax.persistence.Column(name = "update_dt", length = 40, nullable = true)
-    @Column("update_dt")
-    private String updateDt;
+//    @javax.persistence.Column(name = "create_dt", length = 40, nullable = false)
+//    @Column("create_dt")
+//    private String createDt;
+//
+//    @javax.persistence.Column(name = "update_dt", length = 40, nullable = true)
+//    @Column("update_dt")
+//    private String updateDt;
 
 
 

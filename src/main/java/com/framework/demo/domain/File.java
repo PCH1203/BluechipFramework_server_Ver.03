@@ -1,5 +1,7 @@
 package com.framework.demo.domain;
 
+import com.framework.demo.domain.common.BaseEntity;
+import com.framework.demo.domain.common.RuntimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +20,7 @@ import java.time.format.DateTimeFormatter;
 @Table(name = "file")
 @NoArgsConstructor
 @AllArgsConstructor // 자동 빌더 생성
-public class File {
+public class File extends RuntimeEntity {
 
     @javax.persistence.Id
     @javax.persistence.Column(name ="id", length = 20, nullable = false)
@@ -43,12 +45,13 @@ public class File {
     @Column("saved_path")
     private String savedPath;
 
-    @javax.persistence.Column(name = "create_dt")
-    @Column("create_dt")
-    private String createDt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+    @javax.persistence.Column(name = "status")
+    @Column("status")
+    private String status;
 
-    @javax.persistence.Column(name = "update_dt")
-    @Column("update_dt")
-    private String updateDt;
+    @javax.persistence.Column(name = "type")
+    @Column("type")
+    private String type;
+
 
 }

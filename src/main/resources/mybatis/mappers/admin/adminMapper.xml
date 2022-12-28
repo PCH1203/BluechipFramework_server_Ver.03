@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.framework.demo.mapper.admin.AdminMapper">
+
+    <select id="getServiceList" resultType="com.framework.demo.model.admin.vo.ManagementServiceVo">
+        SELECT SC.SERVICE_ID, SC.SERVICE_NAME, SC.SERVICE_URL, SC.SERVER_PORT,
+        SC.VERSION, SC.API_DOCS_PATH, SC.CREATE_DT,
+        SC.IS_OPEN,
+        (SELECT COUNT(*) FROM USER_SERVICE US WHERE US.SERVICE_ID = SC.SERVICE_ID) AS USER_COUNT
+        FROM SERVICE_CATEGORY SC
+        <where>
+            <if test="searchOption == 'serviceId' and searchValue != null">
+                SC.SERVICE_ID LIKE CONCAT('%',#{searchValue},'%')
+            </if>
+            <if test="searchOption == 'serviceName' and searchValue != null">
+                SC.SERVICE_NAME LIKE CONCAT('%',#{searchValue},'%')
+            </if>
+
+        </where>
+        ORDER BY SC.CREATE_DT ASC
+    </select>
+
+
+
+
+
+</mapper>

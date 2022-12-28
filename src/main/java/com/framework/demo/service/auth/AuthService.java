@@ -9,6 +9,7 @@ import com.framework.demo.model.MessageResponseDto;
 import com.framework.demo.model.auth.vo.OtpVo;
 import com.framework.demo.model.user.vo.LoginVo;
 import com.framework.demo.model.user.vo.UserVo;
+import com.framework.demo.repository.admin.ServiceCategoryRepository;
 import com.framework.demo.repository.user.UserServiceRepository;
 import com.framework.demo.repository.auth.AuthRepository;
 import com.framework.demo.repository.session.SessionRepository;
@@ -42,7 +43,7 @@ public class AuthService {
     private final AuthRepository authRepository;
     private final SessionRepository sessionRepository;
     private final OtpRepository otpRepository;
-
+    private final ServiceCategoryRepository serviceCategoryRepository;
     private final UserServiceRepository userServiceRepository;
 
     // MYBATIS mapper
@@ -68,14 +69,18 @@ public class AuthService {
     public ResponseEntity<?> appLoginStep1(HttpServletRequest request, HttpSession session, String serviceId, String userEmail, String password)  {
 
         System.out.println(">>>>> ID/PW 로그인 API (service)");
+        System.out.println(">>>>> service_id: " + serviceId);
 
         // 1. 해당 서비스에 회원 여부 확인.
-
         User member = userRepository.findByUserEmail(userEmail);
 
-        boolean isExist = userServiceRepository.existsByUidAndServiceId(member.getUid(), serviceId);
+        if(member == null) {
+            return new ResponseEntity(new MessageResponseDto(HttpStatusCode.ID_FAIL,userEmail,"사용자를 찾을 수 없습니다."),HttpStatus.OK);
+        }
 
-        if(member == null || !isExist) {
+        boolean isExists = userServiceRepository.existsByUidAndServiceId(member.getUid(), serviceId);
+
+        if(!isExists) {
             return new ResponseEntity(new MessageResponseDto(HttpStatusCode.ID_FAIL,userEmail,"사용자를 찾을 수 없습니다."),HttpStatus.OK);
         }
 
@@ -105,10 +110,13 @@ public class AuthService {
                 userRepository.resetPasswordFailCnt((member.getUid()));
 
                 // 로그인 상태 확인
-                Login loginStatus = loginRepository.findByUid(member.getUid());
+                // TODO : 로그인 상태 확인 조건에 service 추가
+//                Login loginStatus = loginRepository.findByUid(member.getUid());
+                Login loginStatus = loginRepository.findByUidAndServiceId(member.getUid(), serviceId);
 
                 // 로그인 한적이 있고 이미 로그인 상태
-                if (loginStatus != null && loginStatus.getIsLogin().equals("Y")) {
+//                if (loginStatus != null && loginStatus.getIsLogin().equals("Y")) {
+                if (loginStatus != null && loginStatus.getStatus().equals("Y")) {
                     return new ResponseEntity(new MessageResponseDto(HttpStatusCode.ALREADY_LOGIN, userEmail,  "이미 로그인된 계정 입니다."), HttpStatus.OK);
 
                 } else {
@@ -157,15 +165,31 @@ public class AuthService {
         if(!user.getPhone().equals(sendTo)) {
             return new ResponseEntity(new MessageResponseDto(HttpStatusCode.MISS_MATCH_SEND_TO, sendTo,"전화번호가 일치하지 않습니다."), HttpStatus.OK);
         }
+
+        //TODO: JPA 로 변경
         // otp 생성 및 저장.
         System.out.println("otp 생성");
+//        String otpPassword = StringUtil.generateNumber(4);
+//        OtpVo otpVo = new OtpVo();
+//        otpVo.setOtpPassword(otpPassword);
+//        otpVo.setCreator(uid);
+//        otpVo.setSendTo(sendTo);
+//        otpVo.setType(type);
+//        authMapper.addOtp(otpVo);
+
         String otpPassword = StringUtil.generateNumber(4);
-        OtpVo otpVo = new OtpVo();
-        otpVo.setOtpPassword(otpPassword);
-        otpVo.setCreator(uid);
-        otpVo.setSendTo(sendTo);
-        otpVo.setType(type);
-        authMapper.addOtp(otpVo);
+
+        // OTP 빌더 구성
+        Otp otp = Otp.builder()
+                .otpPassword(otpPassword)
+                .creator(uid)
+                .sendTo(sendTo)
+                .type(type)
+                .expireDt(LocalDateTime.now().plusMinutes(3).format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")))
+                .build();
+
+        // OTP 저장
+        otpRepository.save(otp);
 
         String enOtpPassword = bCryptPasswordEncoder.encode(otpPassword);
 
@@ -196,6 +220,7 @@ public class AuthService {
         String serviceId = (String) session.getAttribute("serviceId");
         String type = (String) session.getAttribute("type");
         System.out.println(">>>>>>>> type: " + type);
+        System.out.println(">>>>>>>> service_id: " + serviceId);
 
         // 세션으로 부터 OTP PW와 UID 저장
         String originOtp = (String) session.getAttribute("enOtpPassword");
@@ -220,6 +245,7 @@ public class AuthService {
 
         if(type == "signUp") {
             System.out.println(">>>>> type: " + type);
+
             return new ResponseEntity(new MessageResponseDto(member.getUserEmail(),"계정 연동을 위한 로그인 인증 성공"), HttpStatus.OK);
         }
 
@@ -228,35 +254,50 @@ public class AuthService {
         // 토큰 생성 및 발급
 
         // Access token 발급 (userEmail, serviceId 매개변수로 전달)
-        loginInfo.setAccessToken(jwtTokenProvider.createToken(member.getUserEmail(), serviceId));
+        loginInfo.setAccessToken(jwtTokenProvider.createToken(member.getUserEmail(), serviceId, member.getRole()));
 //        loginInfo.setAccessToken(jwtTokenProvider.createToken(member.getUserEmail(), member.getRoleId()));
         // Refresh token 발급
-        loginInfo.setRefreshToken(jwtTokenProvider.createRefreshToken(member.getUserEmail(), member.getRoleId()));
+        loginInfo.setRefreshToken(jwtTokenProvider.createRefreshToken());
+//        loginInfo.setRefreshToken(jwtTokenProvider.createRefreshToken(member.getUserEmail());
         loginInfo.setUserId(member.getUserEmail());
         loginInfo.setName(member.getName());
         loginInfo.setPhone(member.getPhone());
+        loginInfo.setServiceId(serviceId);
+
+        // 서비스 URL 조회
+        ServiceCategory serviceCategory = serviceCategoryRepository.findByServiceId(serviceId);
+
+        // 서비스  URL
+        loginInfo.setServiceUrl(serviceCategory.getServiceUrl());
+//        loginInfo.setServerPort(serviceCategory.getServerPort());
+//        loginInfo.setApiDocsPath(serviceCategory.getApiDocsPath());
+
 
         Authorities authorities = Authorities. builder()
                 .uid(member.getUid())
                 .refreshToken(loginInfo.getRefreshToken())
-                .createDt(nowDateTime)
+//                .createDt(nowDateTime)
                 .build();
         // RefreshToken 저장.
         authRepository.save(authorities);
 
-        Login loginStatus = loginRepository.findByUid(uid);
+        
+//        Login loginStatus = loginRepository.findByUid(uid);
+        // 검색 조건에 service_id 추가
+        Login loginStatus = loginRepository.findByUidAndServiceId(uid, serviceId);
 
         if(loginStatus == null) {
 
             Login login = Login.builder()
                     .uid(member.getUid())
-                    .isLogin("Y")
-                    .createDt(nowDateTime)
+                    .status("Y")
+                    .serviceId(serviceId)
+//                    .createDt(nowDateTime)
                     .build();
             loginRepository.save(login);
         }
 
-        if(loginStatus != null && loginStatus.getIsLogin().equals("N")) {
+        if(loginStatus != null && loginStatus.getStatus().equals("N")) {
             // isLogin = 'Y'으로 수정
             loginRepository.modifyIsLogin("Y", nowDateTime, uid);
         }
@@ -310,8 +351,6 @@ public class AuthService {
      * @return
      */
     public ResponseEntity<?> tokenRefresh(HttpServletRequest request) {
-        
-        System.out.println("TokenRefresh-serviceimpl");
 
         // Request header에서 리프레시 토큰 추출.
         String refreshToken = jwtTokenProvider.resolveToken(request);
@@ -328,7 +367,7 @@ public class AuthService {
                 UserVo userInfo = userMapper.findUserByUid(uid);
                 
                 // 토큰 생성시 userId(userEmail)과 serviceId를 파라미터로 전달해 준다.
-                String newAccessToken = jwtTokenProvider.createToken(userInfo.getUserEmail(), userInfo.getServiceId());
+                String newAccessToken = jwtTokenProvider.createToken(userInfo.getUserEmail(), userInfo.getServiceId(), userInfo.getRole());
 //                String newAccessToken = jwtTokenProvider.createToken(userInfo.getUserEmail(), userInfo.getRoleId());
                 log.info("신규 엑세스 토큰 발급");
                 return new ResponseEntity(new MessageResponseDto(newAccessToken, "Access token 재발급"), HttpStatus.OK);
@@ -366,7 +405,8 @@ public class AuthService {
         // 로그인 상태 확인
         Login loginStatus = loginRepository.findByUid(member.getUid());
 
-        if (loginStatus != null && loginStatus.getIsLogin().equals("Y")) {
+//        if (loginStatus != null && loginStatus.getIsLogin().equals("Y")) {
+        if (loginStatus != null && loginStatus.getStatus().equals("Y")) {
             return new ResponseEntity(new MessageResponseDto(0, "이미 로그인된 계정 입니다."), HttpStatus.OK);
         }
 

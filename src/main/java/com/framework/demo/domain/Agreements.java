@@ -43,9 +43,9 @@ public class Agreements {
     @Column("contents")
     private String contents;
 
-    @JsonIgnore
-    @javax.persistence.Column(name = "create_dt")
-    @Column("create_dt")
-    private String createDt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+//    @JsonIgnore
+//    @javax.persistence.Column(name = "create_dt")
+//    @Column("create_dt")
+//    private String createDt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 
 }

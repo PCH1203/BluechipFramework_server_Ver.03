@@ -90,7 +90,9 @@ public class UserServiceImpl implements UserService {
         // request header의 userPk로 유저 정보 조회
         User userInfo = jwtTokenProvider.findUserInfoByRequest(request);
 
-        return new ResponseEntity(new MessageResponseDto(userInfo, "나의 계정 정보를 조회 합니다."), HttpStatus.OK);
+
+
+        return new ResponseEntity(new MessageResponseDto(HttpStatusCode.OK ,userInfo, "나의 계정 정보를 조회 합니다."), HttpStatus.OK);
 
     }
 

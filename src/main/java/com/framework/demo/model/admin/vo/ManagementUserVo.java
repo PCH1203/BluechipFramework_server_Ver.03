@@ -19,7 +19,7 @@ public class ManagementUserVo {
 
     private String role;
 
-    private String subRole;
+//    private String subRole;
 
     private String lockYn;
 }

@@ -2,6 +2,7 @@ package com.framework.demo.service.util.impl;
 
 import com.framework.demo.domain.File;
 import com.framework.demo.domain.User;
+import com.framework.demo.enums.HttpStatusCode;
 import com.framework.demo.jwt.JwtTokenProvider;
 import com.framework.demo.model.MessageResponseDto;
 import com.framework.demo.repository.util.FileRepository;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
@@ -37,10 +39,10 @@ public class FileServiceImpl implements FileService {
 
     @Override
 //    public ResponseEntity<?> uploadFile(MultipartFile file, HttpServletRequest request) throws IOException {
-    public ResponseEntity<?> uploadFile(MultipartFile file) throws IOException {
+    public ResponseEntity<?> uploadFile(MultipartFile file, HttpServletRequest request) throws IOException {
 
         // request header의 userPk로 유저 정보 조회
-//        User userInfo = jwtTokenProvider.findUserInfoByRequest(request);
+        User userInfo = jwtTokenProvider.findUserInfoByRequest(request);
 
         // 원래 파일 이름 추출.
         String origName = file.getOriginalFilename();
@@ -57,11 +59,11 @@ public class FileServiceImpl implements FileService {
 
         //파일 빌더 생성
         File bcfFile = File.builder()
-//                .uploader(userInfo.getUid())
+                .uploader(userInfo.getUid())
                 .originName(origName)
                 .savedName(savedName)
                 .savedPath(savePath)
-//                .createDt(uploadDt)
+                .status("save")
                 .build();
 
         // File path에 파일 복사
@@ -69,13 +71,12 @@ public class FileServiceImpl implements FileService {
         //DB에 파일 명세 저장.
         File savedFile = fileRepository.save(bcfFile);
 
-        return new ResponseEntity(new MessageResponseDto(savedFile.getId(),"파일 저장 성공"), HttpStatus.OK);
+        return new ResponseEntity(new MessageResponseDto(HttpStatusCode.OK, savedFile.getOriginName(),"파일 저장 성공"), HttpStatus.OK);
     }
+
 
     @Override
     public ResponseEntity<?> removeFile(Long fileId, String filePath, HttpServletRequest request) throws IOException {
-
-        System.out.println("파일 삭제 IMPL");
 
         // request header의 userPk로 유저 정보 조회
         User userInfo = jwtTokenProvider.findUserInfoByRequest(request);
@@ -94,9 +95,14 @@ public class FileServiceImpl implements FileService {
                         return new ResponseEntity(new MessageResponseDto(0, "삭제하려는 파일/디렉토리가 없습니다."),HttpStatus.OK);
                     }
                     System.out.println("트라이 캐치 테스트");
-                    fileRepository.deleteById(fileId);
 
-                    return new ResponseEntity(new MessageResponseDto(fileId,"파일을 삭제 했습니다."),HttpStatus.OK);
+//                    fileRepository.deleteById(fileId);
+
+                    String status = "del";
+                    String updateDt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+                    fileRepository.modifyStatus(fileId, status, updateDt);
+
+                    return new ResponseEntity(new MessageResponseDto(HttpStatusCode.OK ,0,"파일을 삭제 했습니다."),HttpStatus.OK);
                 }
 
     }

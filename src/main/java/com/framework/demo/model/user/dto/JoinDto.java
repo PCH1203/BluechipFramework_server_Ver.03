@@ -36,7 +36,10 @@ public class JoinDto {
     @Schema(description = "계정타입 web/app", example = "web")
     private String type;
 
-    @Schema(description = "권한 설정", example = "4")
-    private Integer roleId;
+    @Schema(description = "계정 권한", example = "admin / user")
+    private String role;
+
+//    @Schema(description = "권한 설정", example = "4")
+//    private Integer roleId;
 
 }

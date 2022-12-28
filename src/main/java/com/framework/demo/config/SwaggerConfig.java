@@ -19,7 +19,7 @@ public class SwaggerConfig {
 
         Info info = new Info()
                 .version("v1.0.0")
-                .title("BlueChip - Framework")
+                .title("BlueChip Service Management")
                 .description(mainDescription);
 
         // SecuritySecheme명

@@ -8,8 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserServiceRepository extends JpaRepository<UserService, Long> {
+public interface UserServiceRepository extends JpaRepository<UserService, String> {
     List<UserService> findByUid(String uid);
 
     boolean existsByUidAndServiceId(String uid, String serviceId);
+    UserService findByUidAndServiceId(String uid, String serviceId);
 }

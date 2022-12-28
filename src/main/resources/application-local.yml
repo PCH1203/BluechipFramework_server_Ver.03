@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8080
 
 #spring:
 #  datasource:
@@ -23,7 +23,7 @@ spring:
 
 springdoc:
  swagger-ui:
-    path: /framework/demo
+    path: /bluechip/api/docs/admin
     operationsSorter: method
     mainDescription: |
       **<  SWAGGER-UI 사용자 메뉴얼 >**  
@@ -42,7 +42,7 @@ springdoc:
       
       **STEP 4 --------------------------------------------------------------------------------------------**   
       
-      API 사용시 **403 Forbidden**이 발생한다면 Access Token 이 말료된 것으로  
+      API 사용시 **403 Forbidden**이 발생한다면 Access Token 이 만료된 것으로  
       [AUTH] 인증/인가 클래스의 Token Refresh API를 통해 Access Token 을 재발급 받는다.  
       토큰 재발급 후 STEP 2,3 과정을 수행한다.
       

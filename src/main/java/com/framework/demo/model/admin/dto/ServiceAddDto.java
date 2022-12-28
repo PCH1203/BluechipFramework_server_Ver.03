@@ -10,13 +10,22 @@ public class ServiceAddDto {
     @Schema(description = "서비스 아이디")
     private String serviceId;
 
-    @Schema(description = "서비스 명")
+    @Schema(description = "서비스 명", example = "블루칩 서비스_01")
     private String serviceName;
 
-    @Schema(description = "service version")
-    private String version;
+    @Schema(description = "서비스 주소", example = "localhost:3000/bluechip/cms")
+    private String serviceUrl;
 
-    @Schema(description = "isOpen")
-    private String isOpen;
+    @Schema(description = "서버 포트 번호", example = "localhost:8080")
+    private String serverPort;
+
+    @Schema(description = "API 문서 주소", example = "/framework/service_01")
+    private String apiDocsPath;
+
+//    @Schema(description = "서비스 버전 정보", example = "1.0.0")
+//    private String version;
+
+//    @Schema(description = "isOpen" , example = )
+//    private String isOpen;
 
 }

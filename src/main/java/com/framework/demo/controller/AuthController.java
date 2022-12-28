@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 
 @Slf4j
 @RestController
-@RequestMapping("/v2/api/framework/auth")
+@RequestMapping("/framework/api/auth")
 @RequiredArgsConstructor
 @Tag(name = "[AUTH] Authentication / Authorization", description = "계정 인증 / 인가")
 public class AuthController {
@@ -36,7 +36,8 @@ public class AuthController {
         return authService.appLoginStep1(request,session, serviceId, userEmail, password);
     }
 
-    @PostMapping("/login/send-otp")
+//    @PostMapping("/login/send-otp")
+    @PostMapping("/login/otp/send")
     @Operation(description = "otp 전송.", summary = "로그인 STEP_2")
     public ResponseEntity<?> appLoginStep2 (
             HttpServletRequest request,
@@ -48,7 +49,8 @@ public class AuthController {
 
     }
 
-    @PostMapping("/login/check-otp")
+//    @PostMapping("/login/check-otp")
+    @PostMapping("/login/otp/check")
     @Operation(description = "otp 인증", summary = "로그인 STEP_3")
     public ResponseEntity<?> appLoginStep3 (
             HttpServletRequest request,
@@ -63,9 +65,11 @@ public class AuthController {
     @Operation(description = "로그아웃", summary = "로그아웃 API")
     public ResponseEntity<?> logout (HttpServletRequest request, HttpSession session) {
         System.out.println(">>>>> 로그아웃 API");
+        System.out.println(">>>>> access token: " + request.getHeader("Authorization"));
         return authService.logout(request, session);
     }
-    @PostMapping("/token-refresh")
+//    @PostMapping("/token-refresh")
+    @PostMapping("/token/refresh")
     @Operation(description = "Access token을 갱신 합니다.", summary = "토큰 리프래쉬 API")
     public ResponseEntity<?> tokenRefresh(HttpServletRequest request) {
         return authService.tokenRefresh(request);

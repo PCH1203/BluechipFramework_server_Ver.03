@@ -25,8 +25,7 @@ public class Scheduler {
     /**
      * 리프레시토큰 만료 계정에 대한 로그아웃 처리.
      */
-    // 10분마다.
-    @Scheduled(fixedDelay = 1000 * 60 * 10)
+    @Scheduled(fixedDelay = 1000 * 60 * 10) // 10분마다
     public void logout() {
 
         List<Authorities> authorities = authRepository.findAll();

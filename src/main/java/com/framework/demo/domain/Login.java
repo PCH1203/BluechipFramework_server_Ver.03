@@ -1,16 +1,14 @@
 package com.framework.demo.domain;
 
+import com.framework.demo.domain.common.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import javax.persistence.Entity;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Builder
 @Data
@@ -18,24 +16,26 @@ import java.time.format.DateTimeFormatter;
 @Table(name = "login")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Login {
+public class Login extends BaseEntity {
 
-    @javax.persistence.Id
-    @javax.persistence.Column(name ="uid", length = 20, nullable = false)
-    @Id
+//    @javax.persistence.Id
+//    @javax.persistence.Column(name ="uid", length = 20, nullable = false)
+//    @Id
+//    @Column("uid")
+//    private String uid;
+
+    @javax.persistence.Column(name = "uid")
     @Column("uid")
     private String uid;
 
-    @javax.persistence.Column(name = "is_login", length = 2,  columnDefinition = "varchar(2) default 'Y'")
-    @Column("is_login")
-    private String isLogin;
+    @javax.persistence.Column(name = "service_id")
+    @Column("service_id")
+    private String serviceId;
 
-    @javax.persistence.Column(name = "create_dt")
-    @Column("create_dt")
-    private String createDt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+    @javax.persistence.Column(name = "status", length = 2,  columnDefinition = "varchar(2) default 'Y'")
+    @Column("status")
+    private String status;
 
-    @javax.persistence.Column(name = "update_dt", length = 40, nullable = true)
-    @Column("update_dt")
-    private String updateDt;
+
 
 }

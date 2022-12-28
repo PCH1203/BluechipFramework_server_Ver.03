@@ -1,6 +1,7 @@
 package com.framework.demo.service.admin;
 
 import com.framework.demo.domain.User;
+import com.framework.demo.enums.HttpStatusCode;
 import com.framework.demo.enums.prameter.admin.AdminEnums;
 import com.framework.demo.mapper.user.UserMapper;
 import com.framework.demo.model.MessageResponseDto;
@@ -74,7 +75,8 @@ public class AccountManagementService {
 
         if(user != null) {
 
-            String isLogin = loginRepository.findByUid(user.getUid()).getIsLogin();
+//            String isLogin = loginRepository.findByUid(user.getUid()).getIsLogin();
+            String isLogin = loginRepository.findByUid(user.getUid()).getStatus();
 
             if(isLogin.equals("Y")) {
                 // 로그아웃 시간 초기화
@@ -120,22 +122,36 @@ public class AccountManagementService {
         List<ManagementUserVo> users = userMapper.findManagementUsers(option, searchValue);
 
         if(users == null || users.isEmpty()) {
-            return new ResponseEntity(new MessageResponseDto(users, "사용자를 찾을 수 없습니다."), HttpStatus.OK);
+            return new ResponseEntity(new MessageResponseDto(HttpStatusCode.NOT_CONTENT, users, "사용자를 찾을 수 없습니다."), HttpStatus.OK);
         }
 
-        return new ResponseEntity(new MessageResponseDto(users, "사용자 목륵을 조회합니다."), HttpStatus.OK);
+        return new ResponseEntity(new MessageResponseDto(HttpStatusCode.OK, users, "사용자 목륵을 조회합니다."), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> modifyUserLockYn(String uid, String lockYn) {
+    public ResponseEntity<?> modifyUserLockYn(String uid) {
         System.out.println(">>>>> 사용자 계정 정지 상태 변경 API Service");
 
         User user = userRepository.findByUid(uid);
 
-        if(user.getLockYn().equals("N")) {
-            userRepository.modifyLockYnByUid2(uid, lockYn);
+        if (user == null) {
+            return new ResponseEntity(new MessageResponseDto(HttpStatusCode.NOT_FOUND,uid,"사용자를 찾을 수 없습니다."), HttpStatus.OK);
         }
 
-        return new ResponseEntity(new MessageResponseDto(0,"유저 계정을 정지 시켰습니다."), HttpStatus.OK);
+        if(user.getLockYn().equals("Y")) {
+            userRepository.modifyLockYnByUid2(uid, "N");
+            userRepository.resetPasswordFailCnt(uid);
+            return new ResponseEntity(new MessageResponseDto(0,"사용자 계정을 복구 하였습니다."), HttpStatus.OK);
+        }
+
+        userRepository.modifyLockYnByUid2(uid, "Y");
+
+        return new ResponseEntity(new MessageResponseDto(0,"사용자 계정을 정지 시켰습니다."), HttpStatus.OK);
+
+
+
+
+
+
     }
 
 

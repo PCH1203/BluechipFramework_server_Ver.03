@@ -11,8 +11,12 @@ import javax.transaction.Transactional;
 
 @Repository
 public interface OtpRepository extends JpaRepository<Otp, Long> {
-    @Query(value = "SELECT o.expire_dt FROM otp o WHERE o.creator= :uid ORDER BY o.id DESC LIMIT 1",nativeQuery = true)
+//    @Query(value = "SELECT o.expire_dt FROM otp o WHERE o.creator= :uid ORDER BY o.id DESC LIMIT 1",nativeQuery = true)
+    @Query(value = "SELECT o.expire_dt FROM otp o WHERE o.creator= :uid ORDER BY o.create_dt DESC LIMIT 1",nativeQuery = true)
     String findByCreator(String uid);
+
+    @Query(value = "SELECT o.expire_dt FROM otp o WHERE o.send_to= :phone ORDER BY o.create_dt DESC LIMIT 1",nativeQuery = true)
+    String findBySendTo(String phone);
 
 
 

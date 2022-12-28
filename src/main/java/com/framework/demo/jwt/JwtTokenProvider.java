@@ -65,11 +65,18 @@ public class JwtTokenProvider {
 //                .compact();
 //    }
 
-    public String createToken (String userPk, String serviceId) {
+    /**
+     * Access Token 생성
+     * @param userPk
+     * @param serviceId
+     * @return
+     */
+    public String createToken (String userPk, String serviceId, String role) {
         System.out.println(">>>>> Access Token 생성");
         System.out.println(">>>>> serviceId: " + serviceId);
         Claims claims = Jwts.claims().setSubject(userPk); //JWT payload에 저장되는 정보단위, 보통 여기서 user 식별 값을 넣는다.
         claims.put("serviceId", serviceId); // 정보는 key / value 쌍으로 저장된다.
+        claims.put("role", role); // 정보는 key / value 쌍으로 저장된다.
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims) // 정보 저장
@@ -80,15 +87,18 @@ public class JwtTokenProvider {
     }
 
 
-
+    /**
+     * 리프레시 토큰은 user 정보를 담지 않는다.
+     * 오직 Access Token 재발급에만 사용 된다.
+     * @param
+     * @return
+     */
     //JWT 리프레시 토큰 생성
-    public String createRefreshToken (String userPk, int roleId) {
-//    public String createRefreshToken (String userPk, String role) {
-        Claims claims = Jwts.claims().setSubject(userPk); //JWT payload에 저장되는 정보단위, 보통 여기서 user 식별 값을 넣는다.
-        claims.put("roles", roleId); // 정보는 key / value 쌍으로 저장된다.
+    public String createRefreshToken () {
+//        Claims claims = Jwts.claims().setSubject(userPk); //JWT payload에 저장되는 정보단위, 보통 여기서 user 식별 값을 넣는다.
         Date now = new Date();
         return Jwts.builder()
-                .setClaims(claims) // 정보 저장
+//                .setClaims(claims) // 정보 저장
                 .setIssuedAt(now) // 토큰 발행 시간
                 .setExpiration(new Date(now.getTime() + refreshTokenValidTime)) // set Expire Time
                 .signWith(SignatureAlgorithm.HS256, secretKey) // 사용할 암호화 알고리즘과 signature 에 들어갈 secret값 세팅
@@ -138,7 +148,7 @@ public class JwtTokenProvider {
         }
     }
 
-    // 토큰의 유효성 + 만료일자 확인
+    // 토큰 유효성 검사
     public boolean validateToken(String jwtToken) {
 
         System.out.println("toekn 유효성 검사");

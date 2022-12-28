@@ -1,12 +1,12 @@
 package com.framework.demo.domain;
 
+import com.framework.demo.domain.common.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -19,11 +19,9 @@ import javax.validation.constraints.Email;
 @Table(name = "user")
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User extends BaseEntity {
 
-    @javax.persistence.Id
-    @javax.persistence.Column(name ="uid", length = 20, nullable = false)
-    @Id
+    @javax.persistence.Column(name ="uid", length = 20, nullable = false, unique = true)
     @Column("uid")
     @Schema(description = "사용자 PK", example = "uJjDEPSdX3wyeX0P4lAU")
     private String uid;
@@ -48,38 +46,26 @@ public class User {
     @Column("phone")
     private String phone;
 
-//    @javax.persistence.Column(name = "service_id", length = 20, nullable = false)
-//    @Schema(description = "가입 서비스")
-//    @Column("service_id")
-//    private String serviceId;
-
     @javax.persistence.Column(name = "type", length = 20, nullable = false)
     @Schema(description = "회원 타입 (web, app)", example = "web")
     @Column("type")
     private String type;
 
-    @javax.persistence.Column(name = "role_id")
-    @Schema(description = "", example = "user")
-    @ColumnDefault("4")
-    @Column("role_id")
-    private Integer roleId;
+    @javax.persistence.Column(name = "role", length = 10, nullable = false)
+    @Schema(description = "계정 권한", example = "user")
+    @Column("role")
+    private String role;
 
     @javax.persistence.Column(name = "password_fail_cnt", length = 22)
     @Column("password_fail_cnt")
     @ColumnDefault("0")
     private int passwordFailCnt;
 
-    @javax.persistence.Column(name = "lock_yn", columnDefinition = "varchar(15) default 'N'")
+    @javax.persistence.Column(name = "lock_yn", length = 2,  columnDefinition = "varchar(2) default 'N'")
     @Schema(description = "lock_yn", example = "N")
     @Column("lock_yn")
     private String lockYn;
 
-    @javax.persistence.Column(name = "create_dt", length = 40, nullable = false)
-    @Column("create_dt")
-    private String createDt;
 
-    @javax.persistence.Column(name = "update_dt", length = 40, nullable = true)
-    @Column("update_dt")
-    private String updateDt;
 
 }

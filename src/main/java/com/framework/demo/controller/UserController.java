@@ -40,7 +40,8 @@ public class UserController {
     @Operation(description = "회원가입을 진행 합니다.", summary = "회원가입 API")
     public ResponseEntity<?> join(@RequestBody @Valid JoinDto joinDto) {
         System.out.println("회원가입 API");
-        return userService.join(joinDto);
+//        return userService.join(joinDto);
+        return userService2.join(joinDto);
     }
 
     @GetMapping("/join/id-check")
@@ -50,6 +51,26 @@ public class UserController {
             @RequestParam(required = true) @Parameter(description = "아이디")String userEmail ) {
         System.out.println(">>>>> 아이디 중복검사 API");
         return userService2.emailCheck(userEmail, serviceId);
+    }
+
+    @PostMapping("/join/phone/otp/send")
+    @Operation(description = "회원가입 전화번호 인증 OTP 전송", summary = "회원가입 전화번호 인증 OTP전송 API")
+    public ResponseEntity<?> joinPhoneOtpSend(
+            HttpSession session,
+            @RequestParam(required = true) @Parameter(description = "전화번호") String phone) {
+        System.out.println(">>>>> 회원가입 전화번호 인증 OTP 전송 API");
+        return userService2.joinPhoneOtpSend(session, phone);
+    }
+
+    @PostMapping("/join/phone/otp/check")
+    @Operation(description = "회원가입 전화번호 인증 OTP 인증번호 확인", summary = "회원가입 전화번호 인증 OTP 확인 API")
+    public ResponseEntity<?> joinPhoneOtpCheck(
+            HttpSession session,
+            @RequestParam(required = true) @Parameter(description = "otp 인증번호 입력.") String otpPassword) {
+
+        System.out.println(">>>>> 회원가입 전화번호 인증 API");
+
+        return userService2.joinPhoneOtpCheck(session, otpPassword);
     }
 
     /**
@@ -69,10 +90,30 @@ public class UserController {
         return userService2.interlockLogin(session, userEmail, password);
     }
 
+    /**
+     * 계정 + 서비스 연동 API
+     * @param session
+     * @param serviceId
+     * @return
+     */
+    @PostMapping("/join/link-service")
+    @Operation(description = "계정 + 서비스 연동", summary = "계정 + 서비스 연동 API")
+    public ResponseEntity<?> linkService(
+            HttpSession session,
+            @RequestParam(required = true) @Parameter(description = "아이디")String serviceId
+    ) {
+        System.out.println(">>>>> 계정 + 서비스 연동 API (controller)");
+        System.out.println(">>>>> uid: " + session.getAttribute("uid"));
+        return userService2.linkService(session, serviceId);
+    }
+
     @GetMapping("/my-account")
     @Operation(description = "나의 프로필 조회.", summary = "MY PROFILE 조회 API")
-    @ApiResponse(responseCode = "200", description = "나의 계정 정보를 조회 합니다.", content = @Content(schema = @Schema(implementation = User.class)))
+//    @ApiResponse(responseCode = "200", description = "나의 계정 정보를 조회 합니다.", content = @Content(schema = @Schema(implementation = User.class)))
     public ResponseEntity<?> findMyAccount (HttpServletRequest request) {
+        System.out.println(">>>>> myprofile 조회");
+        System.out.println(">>>>> access token: " + request.getHeader("Authorization"));
+        System.out.println(">>>>> access token: " + request);
         return userService.findMyAccount(request);
     }
 

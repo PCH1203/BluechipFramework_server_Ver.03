@@ -55,7 +55,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable()
                 .authorizeRequests()// 요청에 대한 사용 권한 체크
 //                .antMatchers("/framework/api/user/**").authenticated()
-                .antMatchers("http://localhost:3000/management/**").authenticated()
+//                .antMatchers("http://localhost:3000/management/**").authenticated()
+                //해당 URL에 대한 토큰 검증을 필요로 한다.
+//                .antMatchers("/framework/api/util/**").authenticated()
                 .antMatchers("/framework/**").permitAll()
 //                .antMatchers("/**").permitAll()
                         .and()

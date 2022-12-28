@@ -67,12 +67,12 @@ public class AdminAccountController {
     @PostMapping("/modify/user/status")
     @Operation(description = "사용자 계정 정지 상태를 변경 합니다.", summary = "사용자 계정 정지 상태 변경 API")
     public ResponseEntity<?> modifyUserLockYn(
-            @RequestParam(required = true) @Parameter(description = "uid") String uid,
-            @RequestParam(required = true) @Parameter(description = "상태값") String lockYn
+            @RequestParam(required = true) @Parameter(description = "uid") String uid
+//            @RequestParam(required = true) @Parameter(description = "상태값") String lockYn
     ) {
         System.out.println(">>>>> 사용자 계정 정지 상태 변경 API Controller");
         log.info("uid: " + uid );
-        return accountManagementService.modifyUserLockYn(uid, lockYn);
+        return accountManagementService.modifyUserLockYn(uid);
     }
 
 }

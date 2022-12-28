@@ -122,10 +122,26 @@
         WHERE UID = #{uid}
     </update>
 
+<!--    <select id="findManagementUsers" resultType="com.framework.demo.model.admin.vo.ManagementUserVo">-->
+<!--        SELECT @num:=@num+1 as NO, U.UID, U.USER_EMAIL, U.NAME, U.PHONE, U.TYPE, U.LOCK_YN, R.ROLE-->
+<!--        FROM (SELECT @num:=0) as n,USER U-->
+<!--        LEFT JOIN ROLES R ON R.ID = U.ROLE_ID-->
+<!--        <where>-->
+<!--            <if test="option == 'name' and searchValue != null">-->
+<!--                U.NAME LIKE CONCAT('%',#{searchValue},'%')-->
+<!--            </if>-->
+<!--            <if test="option == 'userEmail' and searchValue != null">-->
+<!--                U.USER_EMAIL LIKE CONCAT('%',#{searchValue},'%')-->
+<!--            </if>-->
+<!--            <if test="option == 'phone' and searchValue != null">-->
+<!--                u.PHONE LIKE CONCAT('%',#{searchValue},'%')-->
+<!--            </if>-->
+<!--        </where>-->
+<!--    </select>-->
+
     <select id="findManagementUsers" resultType="com.framework.demo.model.admin.vo.ManagementUserVo">
-        SELECT @num:=@num+1 as NO, U.UID, U.USER_EMAIL, U.NAME, U.PHONE, U.TYPE, U.LOCK_YN, R.ROLE, R.SUB_ROLE
+        SELECT @num:=@num+1 as NO, U.UID, U.USER_EMAIL, U.NAME, U.PHONE, U.TYPE, U.LOCK_YN, U.ROLE
         FROM (SELECT @num:=0) as n,USER U
-        LEFT JOIN ROLES R ON R.ID = U.ROLE_ID
         <where>
             <if test="option == 'name' and searchValue != null">
                 U.NAME LIKE CONCAT('%',#{searchValue},'%')
@@ -137,19 +153,21 @@
                 u.PHONE LIKE CONCAT('%',#{searchValue},'%')
             </if>
         </where>
+        ORDER BY CREATE_DT DESC
     </select>
 
     <select id="getSignedServiceList" resultType="com.framework.demo.model.user.vo.SignedUpServiceListVo">
 
         /* getSignedServiceList */
 
-        SELECT SC.SERVICE_ID, SC.SERVICE_NAME,
+        SELECT SC.SERVICE_ID, SC.SERVICE_NAME, SC.CREATE_DT,
         (CASE
             WHEN US.UID = #{UID} THEN 'Y' ELSE 'N'
          END
         ) AS STATUS
         FROM SERVICE_CATEGORY SC
         LEFT JOIN USER_SERVICE US ON US.SERVICE_ID = SC.SERVICE_ID
+        ORDER BY SC.CREATE_DT ASC
     </select>
 
 
